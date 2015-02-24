@@ -2,6 +2,7 @@ package org.parisoft.resty;
 
 import static org.apache.http.HttpHeaders.ACCEPT;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
+import static org.parisoft.resty.utils.JacksonUtils.toJsonReference;
 import static org.parisoft.resty.utils.StringUtils.removeLeadingSlashes;
 
 import java.io.IOException;
@@ -15,11 +16,12 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.message.BasicNameValuePair;
-import org.parisoft.resty.request.Request;
+import org.codehaus.jackson.type.TypeReference;
+import org.parisoft.resty.request.RequestFactory;
+import org.parisoft.resty.response.Response;
 
 public class Client {
 
@@ -63,7 +65,7 @@ public class Client {
         }
 
         for (MediaType type : types) {
-            header(ACCEPT, type.toString());
+            header(ACCEPT, String.format("%s/%s", type.getType(), type.getSubtype()));
         }
 
         return this;
@@ -181,7 +183,43 @@ public class Client {
         return this;
     }
 
-    public HttpResponse get() throws IOException {
-        return Request.doGet(this);
+    public Response get() throws IOException {
+        return RequestFactory
+                .newGetRequest(this)
+                .submit();
+    }
+
+    public <T> T get(Class<T> someClass) throws IOException {
+        return get()
+                .getEntityAs(someClass);
+    }
+
+    public <T> T get(TypeReference<T> reference) throws IOException {
+        return get()
+                .getEntityAs(reference);
+    }
+
+    public <T> T get(final com.fasterxml.jackson.core.type.TypeReference<T> reference) throws IOException {
+        return get(toJsonReference(reference));
+    }
+
+    public Response delete() throws IOException {
+        return RequestFactory
+                .newDeleteRequest(this)
+                .submit();
+    }
+
+    public <T> T delete(Class<T> someClass) throws IOException {
+        return delete()
+                .getEntityAs(someClass);
+    }
+
+    public <T> T delete(TypeReference<T> reference) throws IOException {
+        return delete()
+                .getEntityAs(reference);
+    }
+
+    public <T> T delete(com.fasterxml.jackson.core.type.TypeReference<T> reference) throws IOException {
+        return delete(toJsonReference(reference));
     }
 }

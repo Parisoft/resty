@@ -1,5 +1,9 @@
 package org.parisoft.resty.response;
 
-public class Response {
+import org.apache.http.HttpResponse;
+import org.parisoft.resty.response.entity.EntityReader;
 
+public interface Response extends HttpResponse, EntityReader {
+
+    public int getStatusCode();
 }
