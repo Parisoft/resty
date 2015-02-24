@@ -29,10 +29,6 @@ public class EntityReaderImpl implements EntityReader {
         this.httpResponse = httpResponse;
     }
 
-    /**
-     * @return this HTTP entity content as {@link java.lang.String}.
-     * @throws IOException if an error occurs while reading the input stream
-     */
     @Override
     public String getEntityAsString() throws IOException {
         if (body == null) {
@@ -122,10 +118,7 @@ public class EntityReaderImpl implements EntityReader {
         return null;
     }
 
-    /**
-     * @param entity The HTTP entity to get the charset
-     * @return the charset of a given HTTP entity
-     */
+    @Override
     public String getContentCharSet() {
         final Header type = getContentType();
 
@@ -140,6 +133,7 @@ public class EntityReaderImpl implements EntityReader {
         return CHARSET_DEFAULT;
     }
 
+    @Override
     public Header getContentType() {
         final HttpEntity entity = httpResponse.getEntity();
 
@@ -150,10 +144,7 @@ public class EntityReaderImpl implements EntityReader {
         return new BasicHeader(CONTENT_TYPE, "");
     }
 
-    /**
-     * @param entity The HTTP entity to get the encoding
-     * @return the encoding of a given HTTP entity or a empty String if unknow
-     */
+    @Override
     public Header getContentEncoding() {
         final HttpEntity entity = httpResponse.getEntity();
 

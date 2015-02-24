@@ -2,6 +2,7 @@ package org.parisoft.resty.response.entity;
 
 import java.io.IOException;
 
+import org.apache.http.Header;
 import org.codehaus.jackson.type.TypeReference;
 
 
@@ -15,4 +16,18 @@ public interface EntityReader {
     public <T> T getEntityAs(Class<T> someClass) throws IOException ;
 
     public <T> T getEntityAs(TypeReference<T> reference) throws IOException;
+
+    /**
+     * @param entity The HTTP entity to get the charset
+     * @return the charset of a given HTTP entity
+     */
+    public String getContentCharSet();
+
+    public Header getContentType();
+
+    /**
+     * @param entity The HTTP entity to get the encoding
+     * @return the encoding of a given HTTP entity or a empty String if unknow
+     */
+    public Header getContentEncoding();
 }

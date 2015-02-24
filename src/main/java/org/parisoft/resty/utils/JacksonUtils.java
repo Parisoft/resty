@@ -31,6 +31,16 @@ public class JacksonUtils {
         }
     }
 
+    public static String write(Object object, MediaType type) throws IOException {
+        if (RESTy.getJsonProvider().isWriteable(object.getClass(), null, null, type)) {
+            return RESTy.getJsonProvider().locateMapper(object.getClass(), type).writeValueAsString(object);
+        } else if (RESTy.getXmlProvider().isWriteable(object.getClass(), null, null, type)) {
+            return RESTy.getXmlProvider().locateMapper(object.getClass(), type).writeValueAsString(object);
+        } else {
+            throw new IOException(String.format("Cannot write request entity: no providers found for class=%s and Content-Type=%s", object.getClass(), type));
+        }
+    }
+
     public static <T> com.fasterxml.jackson.core.type.TypeReference<T> toXmlReference(final TypeReference<T> jsonReference) {
         return new com.fasterxml.jackson.core.type.TypeReference<T>() {
             @Override

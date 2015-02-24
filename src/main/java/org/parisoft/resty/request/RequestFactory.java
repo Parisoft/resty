@@ -1,5 +1,7 @@
 package org.parisoft.resty.request;
 
+import java.io.IOException;
+
 import org.parisoft.resty.Client;
 
 public class RequestFactory {
@@ -12,7 +14,15 @@ public class RequestFactory {
         return new DeleteRequest(client);
     }
 
-    public static Request newRequest(String method, Client client) {
+    public static Request newPostRequest(Client client) throws IOException {
+        return new PostRequest(client);
+    }
+
+    public static Request newPutRequest(Client client) throws IOException {
+        return new PutRequest(client);
+    }
+
+    public static Request newRequest(String method, Client client) throws IOException {
         if (method == null) {
             throw new IllegalArgumentException("HTTP Method cannot be null");
         }
@@ -25,6 +35,12 @@ public class RequestFactory {
 
         case "DELETE":
             return newDeleteRequest(client);
+
+        case "POST":
+            return newPostRequest(client);
+
+        case "PUT":
+            return newPutRequest(client);
 
         default:
             return new Request(client) {

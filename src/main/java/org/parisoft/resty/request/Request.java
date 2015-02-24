@@ -22,7 +22,7 @@ import org.parisoft.resty.response.ResponseInvocationHandler;
 
 public abstract class Request extends HttpEntityEnclosingRequestBase {
 
-    private final Client client;
+    protected final Client client;
 
     Request(Client client) {
         this.client = client;
