@@ -1,10 +1,11 @@
 package org.parisoft.resty.request;
 
-import static org.parisoft.resty.utils.StringUtils.htmlEncode;
+import static org.parisoft.resty.utils.StringUtils.urlEncode;
 
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.net.URI;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.http.HttpResponse;
@@ -45,27 +46,37 @@ public abstract class Request extends HttpEntityEnclosingRequestBase {
     }
 
     private void convertHeaders() {
-        for (Entry<String, String> header : client.headers().entrySet()) {
-            addHeader(header.getKey(), header.getValue());
+        for (Entry<String, List<String>> header : client.headers().entrySet()) {
+            final StringBuilder valueBuilder = new StringBuilder();
+
+            for (String value : header.getValue()) {
+                valueBuilder.append(value).append(", ");
+            }
+
+            valueBuilder.delete(valueBuilder.length() - 2, valueBuilder.length());
+
+            addHeader(header.getKey(), valueBuilder.toString());
         }
     }
 
     private void convertUri() {
-        final String fullPath;
+        final StringBuilder uriBuilder = new StringBuilder(client.rootPath());
 
-        if (client.queries().isEmpty()) {
-            fullPath = client.path();
-        } else {
-            final StringBuilder uriBuilder = new StringBuilder(client.path()).append("?");
-
-            for (NameValuePair pair : client.queries()) {
-                uriBuilder.append(pair.getName()).append("=").append(htmlEncode(pair.getValue())).append("&");
-            }
-
-            fullPath = uriBuilder.deleteCharAt(uriBuilder.length() - 1).toString();
+        for (String path : client.paths()) {
+            uriBuilder.append("/").append(urlEncode(path));
         }
 
-        setURI(URI.create(fullPath));
+        if (!client.queries().isEmpty()) {
+            uriBuilder.append("?");
+
+            for (NameValuePair pair : client.queries()) {
+                uriBuilder.append(pair.getName()).append("=").append(urlEncode(pair.getValue())).append("&");
+            }
+
+            uriBuilder.deleteCharAt(uriBuilder.length() - 1);
+        }
+
+        setURI(URI.create(uriBuilder.toString()));
     }
 
     public Response submit() throws IOException {

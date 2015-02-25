@@ -1,5 +1,6 @@
 package org.parisoft.resty.response.entity;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.ws.rs.core.MediaType.CHARSET_PARAMETER;
 import static org.apache.http.HttpHeaders.CONTENT_ENCODING;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
@@ -21,7 +22,6 @@ import org.parisoft.resty.utils.JacksonUtils;
 import org.parisoft.resty.utils.MediaTypeUtils;
 
 public class EntityReaderImpl implements EntityReader {
-    public static final String CHARSET_DEFAULT = "UTF-8";
 
     private final HttpResponse httpResponse;
     private String body;
@@ -136,7 +136,7 @@ public class EntityReaderImpl implements EntityReader {
             }
         }
 
-        return CHARSET_DEFAULT;
+        return UTF_8.name();
     }
 
     @Override

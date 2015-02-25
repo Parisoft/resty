@@ -31,7 +31,7 @@ public class PostRequest extends Request {
         } else if (isPrimitive(rawEntity)) {
             entity = new StringEntity(rawEntity.toString());
         } else {
-            final String rawType = client.headers().get(CONTENT_TYPE);
+            final String rawType = client.headers().containsKey(CONTENT_TYPE) ? client.headers().get(CONTENT_TYPE).get(0) : null;
             final MediaType type;
             final String entityAsString;
 

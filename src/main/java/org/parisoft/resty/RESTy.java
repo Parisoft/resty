@@ -1,5 +1,6 @@
 package org.parisoft.resty;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,11 @@ public class RESTy {
         return providers.values();
     }
 
-    public static Client client(String basicPath) {
-        return new Client(basicPath);
+    public static Client client(String baseAddress) {
+        return new Client(baseAddress);
+    }
+
+    public static Client client(URI uri) {
+        return new Client(uri);
     }
 }
