@@ -3,11 +3,11 @@ package org.parisoft.resty.response.entity;
 import static javax.ws.rs.core.MediaType.CHARSET_PARAMETER;
 import static org.apache.http.HttpHeaders.CONTENT_ENCODING;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
+import static org.parisoft.resty.utils.ObjectUtils.isInstanciableFromString;
+import static org.parisoft.resty.utils.ObjectUtils.newInstanceFromString;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import javax.ws.rs.core.MediaType;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -18,6 +18,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.type.TypeReference;
 import org.parisoft.resty.utils.JacksonUtils;
+import org.parisoft.resty.utils.MediaTypeUtils;
 
 public class EntityReaderImpl implements EntityReader {
     public static final String CHARSET_DEFAULT = "UTF-8";
@@ -38,16 +39,13 @@ public class EntityReaderImpl implements EntityReader {
                 return body = "";
             }
 
-            final String encoding = getContentEncoding().getValue();
-            final String charset = getContentCharSet();
-
             try {
-                final HttpEntity entityWrapper = "gzip".equalsIgnoreCase(encoding) ? new GzipDecompressingEntity(entity) : entity;
+                final HttpEntity entityWrapper = isGzipEncoding() ? new GzipDecompressingEntity(entity) : entity;
                 final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
                 entityWrapper.writeTo(output);
 
-                body = output.toString(charset);
+                body = output.toString(getContentCharSet());
             } finally {
                 EntityUtils.consume(entity);
             }
@@ -58,64 +56,72 @@ public class EntityReaderImpl implements EntityReader {
 
     @Override
     public <T> T getEntityAs(Class<T> someClass) throws IOException {
-        if (body == null) {
-            final HttpEntity entity = httpResponse.getEntity();
-
-            if (entity == null) {
-                return null;
-            }
-
-            final MediaType type;
-
-            try {
-                type = MediaType.valueOf(getContentType().getValue());
-            } catch (Exception e) {
-                throw new IOException("Cannot read response entity: unknown Content-Type=" + getContentType().getValue());
-            }
-
-            final String encoding = getContentEncoding().getValue();
-
-            try {
-                final HttpEntity entityWrapper = "gzip".equalsIgnoreCase(encoding) ? new GzipDecompressingEntity(entity) : entity;
-
-                return JacksonUtils.read(entityWrapper, someClass, type);
-            } finally {
-                EntityUtils.consume(entity);
-            }
+        if (isInstanciableFromString(someClass)) {
+            return newInstanceFromString(someClass, getEntityAsString());
         }
 
-        return null;
+        if (body != null) {
+            return getEntityFromBodyAs(someClass);
+        }
+
+        final HttpEntity entity = httpResponse.getEntity();
+
+        if (entity == null) {
+            return null;
+        }
+
+        try {
+            final HttpEntity entityWrapper = isGzipEncoding() ? new GzipDecompressingEntity(entity) : entity;
+
+            return JacksonUtils.read(entityWrapper, someClass, MediaTypeUtils.valueOf(getContentType()));
+        } catch (Exception e) {
+            throw new IOException("Cannot read response entity: " + e.getMessage());
+        } finally {
+            EntityUtils.consume(entity);
+        }
+    }
+
+    private <T> T getEntityFromBodyAs(Class<T> someClass) throws IOException {
+        try {
+            return JacksonUtils.read(body, someClass, MediaTypeUtils.valueOf(getContentType()));
+        } catch (Exception e) {
+            throw new IOException("Cannot read response entity: " + e.getMessage());
+        }
     }
 
     @Override
     public <T> T getEntityAs(TypeReference<T> reference) throws IOException {
-        if (body == null) {
-            final HttpEntity entity = httpResponse.getEntity();
-
-            if (entity == null) {
-                return null;
-            }
-
-            final MediaType type;
-
-            try {
-                type = MediaType.valueOf(getContentType().getValue());
-            } catch (Exception e) {
-                throw new IOException("Cannot read response entity: unknown Content-Type=" + getContentType().getValue());
-            }
-
-            final String encoding = getContentEncoding().getValue();
-
-            try {
-                final HttpEntity entityWrapper = "gzip".equalsIgnoreCase(encoding) ? new GzipDecompressingEntity(entity) : entity;
-
-                return JacksonUtils.read(entityWrapper, reference, type);
-            } finally {
-                EntityUtils.consume(entity);
-            }
+        if (body != null) {
+            return getEntityFromBodyAs(reference);
         }
 
-        return null;
+        final HttpEntity entity = httpResponse.getEntity();
+
+        if (entity == null) {
+            return null;
+        }
+
+        try {
+            final HttpEntity entityWrapper = isGzipEncoding() ? new GzipDecompressingEntity(entity) : entity;
+
+            return JacksonUtils.read(entityWrapper, reference, MediaTypeUtils.valueOf(getContentType()));
+        } catch (Exception e) {
+            throw new IOException("Cannot read response entity: " + e.getMessage());
+        } finally {
+            EntityUtils.consume(entity);
+        }
+    }
+
+    private <T> T getEntityFromBodyAs(TypeReference<T> reference) throws IOException {
+        try {
+            return JacksonUtils.read(body, reference, MediaTypeUtils.valueOf(getContentType()));
+        } catch (Exception e) {
+            throw new IOException("Cannot read response entity: " + e.getMessage());
+        }
+    }
+
+    private boolean isGzipEncoding() {
+        return "gzip".equalsIgnoreCase(getContentEncoding().getValue());
     }
 
     @Override
@@ -141,6 +147,12 @@ public class EntityReaderImpl implements EntityReader {
             return entity.getContentType();
         }
 
+        final Header contentType = httpResponse.getFirstHeader(CONTENT_TYPE);
+
+        if (contentType != null) {
+            return contentType;
+        }
+
         return new BasicHeader(CONTENT_TYPE, "");
     }
 
@@ -154,6 +166,12 @@ public class EntityReaderImpl implements EntityReader {
             if (encoding != null) {
                 return encoding;
             }
+        }
+
+        final Header contentEncoding = httpResponse.getFirstHeader(CONTENT_ENCODING);
+
+        if (contentEncoding != null) {
+            return contentEncoding;
         }
 
         return new BasicHeader(CONTENT_ENCODING, "");

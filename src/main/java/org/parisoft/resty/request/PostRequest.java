@@ -1,6 +1,7 @@
 package org.parisoft.resty.request;
 
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
+import static org.parisoft.resty.utils.ObjectUtils.isPrimitive;
 
 import java.io.IOException;
 
@@ -10,6 +11,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 import org.parisoft.resty.Client;
 import org.parisoft.resty.utils.JacksonUtils;
+import org.parisoft.resty.utils.MediaTypeUtils;
 
 public class PostRequest extends Request {
 
@@ -26,18 +28,21 @@ public class PostRequest extends Request {
             entity = (HttpEntity) rawEntity;
         } else if (rawEntity instanceof String) {
             entity = new StringEntity((String) rawEntity);
+        } else if (isPrimitive(rawEntity)) {
+            entity = new StringEntity(rawEntity.toString());
         } else {
             final String rawType = client.headers().get(CONTENT_TYPE);
             final MediaType type;
+            final String entityAsString;
 
             try {
-                type = MediaType.valueOf(rawType);
+                type = MediaTypeUtils.valueOf(rawType);
+                entityAsString = JacksonUtils.write(rawEntity, type);
             } catch (Exception e) {
-                throw new IOException("Cannot write request entity: unknown Content-Type=" + rawType);
+                throw new IOException("Cannot write request entity: " + e.getMessage());
             }
 
-            final String entityString = JacksonUtils.write(rawEntity, type);
-            entity = new StringEntity(entityString);
+            entity = new StringEntity(entityAsString);
         }
 
         setEntity(entity);
@@ -47,5 +52,4 @@ public class PostRequest extends Request {
     public String getMethod() {
         return "POST";
     }
-
 }

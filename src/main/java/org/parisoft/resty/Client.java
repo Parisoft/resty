@@ -71,7 +71,7 @@ public class Client {
         }
 
         for (MediaType type : types) {
-            header(ACCEPT, String.format("%s/%s", type.getType(), type.getSubtype()));
+            header(ACCEPT, type.toString());
         }
 
         return this;
@@ -126,6 +126,10 @@ public class Client {
         }
 
         return header("Cookie", cookieBuilder.toString());
+    }
+
+    public Client cookie(String cookieAsString) {
+        return header("Cookie", cookieAsString);
     }
 
     public Client header(HttpHeaders name, String value) {
@@ -201,18 +205,18 @@ public class Client {
                 .submit();
     }
 
-    public <T> T get(Class<T> someClass) throws IOException {
+    public <T> T get(Class<T> responseClass) throws IOException {
         return get()
-                .getEntityAs(someClass);
+                .getEntityAs(responseClass);
     }
 
-    public <T> T get(TypeReference<T> reference) throws IOException {
+    public <T> T get(TypeReference<T> responseReference) throws IOException {
         return get()
-                .getEntityAs(reference);
+                .getEntityAs(responseReference);
     }
 
-    public <T> T get(final com.fasterxml.jackson.core.type.TypeReference<T> reference) throws IOException {
-        return get(toJsonReference(reference));
+    public <T> T get(final com.fasterxml.jackson.core.type.TypeReference<T> responseReference) throws IOException {
+        return get(toJsonReference(responseReference));
     }
 
     public Response delete() throws IOException {
@@ -221,18 +225,38 @@ public class Client {
                 .submit();
     }
 
-    public <T> T delete(Class<T> someClass) throws IOException {
+    public <T> T delete(Class<T> responseClass) throws IOException {
         return delete()
-                .getEntityAs(someClass);
+                .getEntityAs(responseClass);
     }
 
-    public <T> T delete(TypeReference<T> reference) throws IOException {
+    public <T> T delete(TypeReference<T> responseReference) throws IOException {
         return delete()
-                .getEntityAs(reference);
+                .getEntityAs(responseReference);
     }
 
-    public <T> T delete(com.fasterxml.jackson.core.type.TypeReference<T> reference) throws IOException {
-        return delete(toJsonReference(reference));
+    public <T> T delete(com.fasterxml.jackson.core.type.TypeReference<T> responseReference) throws IOException {
+        return delete(toJsonReference(responseReference));
+    }
+
+    public Response execute(String httpMethod) throws IOException {
+        return RequestFactory
+                .newRequest(httpMethod, this)
+                .submit();
+    }
+
+    public <T> T execute(String httpMethod, Class<T> responseClass) throws IOException {
+        return execute(httpMethod)
+                .getEntityAs(responseClass);
+    }
+
+    public <T> T execute(String httpMethod, TypeReference<T> responseReference) throws IOException {
+        return execute(httpMethod)
+                .getEntityAs(responseReference);
+    }
+
+    public <T> T execute(String httpMethod, com.fasterxml.jackson.core.type.TypeReference<T> responseReference) throws IOException {
+        return execute(httpMethod, toJsonReference(responseReference));
     }
 
     public Response post() throws IOException {
@@ -241,18 +265,18 @@ public class Client {
                 .submit();
     }
 
-    public <T> T post(Class<T> someClass) throws IOException {
+    public <T> T post(Class<T> responseClass) throws IOException {
         return post()
-                .getEntityAs(someClass);
+                .getEntityAs(responseClass);
     }
 
-    public <T> T post(TypeReference<T> reference) throws IOException {
+    public <T> T post(TypeReference<T> responseReference) throws IOException {
         return post()
-                .getEntityAs(reference);
+                .getEntityAs(responseReference);
     }
 
-    public <T> T post(com.fasterxml.jackson.core.type.TypeReference<T> reference) throws IOException {
-        return post(toJsonReference(reference));
+    public <T> T post(com.fasterxml.jackson.core.type.TypeReference<T> responseReference) throws IOException {
+        return post(toJsonReference(responseReference));
     }
 
     public Response post(Object entity) throws IOException {
@@ -261,17 +285,57 @@ public class Client {
         return post();
     }
 
-    public <T> T post(Object entity, Class<T> someClass) throws IOException {
+    public <T> T post(Object entity, Class<T> responseClass) throws IOException {
         return post(entity)
-                .getEntityAs(someClass);
+                .getEntityAs(responseClass);
     }
 
-    public <T> T post(Object entity, TypeReference<T> reference) throws IOException {
+    public <T> T post(Object entity, TypeReference<T> responseReference) throws IOException {
         return post(entity)
-                .getEntityAs(reference);
+                .getEntityAs(responseReference);
     }
 
-    public <T> T post(Object entity, com.fasterxml.jackson.core.type.TypeReference<T> reference) throws IOException {
-        return post(entity, toJsonReference(reference));
+    public <T> T post(Object entity, com.fasterxml.jackson.core.type.TypeReference<T> responseReference) throws IOException {
+        return post(entity, toJsonReference(responseReference));
+    }
+
+    public Response put() throws IOException {
+        return RequestFactory
+                .newPutRequest(this)
+                .submit();
+    }
+
+    public <T> T put(Class<T> responseClass) throws IOException {
+        return put()
+                .getEntityAs(responseClass);
+    }
+
+    public <T> T put(TypeReference<T> responseReference) throws IOException {
+        return put()
+                .getEntityAs(responseReference);
+    }
+
+    public <T> T put(com.fasterxml.jackson.core.type.TypeReference<T> responseReference) throws IOException {
+        return put(toJsonReference(responseReference));
+    }
+
+    public Response put(Object entity) throws IOException {
+        this.entity = entity;
+
+        return put();
+    }
+
+    public <T> T put(Object entity, Class<T> responseClass) throws IOException {
+        return put(entity)
+                .getEntityAs(responseClass);
+    }
+
+    public <T> T put(Object entity, TypeReference<T> responseReference) throws IOException {
+        return put(entity)
+                .getEntityAs(responseReference);
+    }
+
+    public <T> T put(Object entity, com.fasterxml.jackson.core.type.TypeReference<T> responseReference) throws IOException {
+        return put(entity, toJsonReference(responseReference));
     }
 }

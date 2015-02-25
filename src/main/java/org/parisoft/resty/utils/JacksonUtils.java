@@ -17,7 +17,7 @@ public class JacksonUtils {
         } else if (RESTy.getXmlProvider().isReadable(someClass, null, null, type)) {
             return RESTy.getXmlProvider().locateMapper(someClass, type).readValue(entity.getContent(), someClass);
         } else {
-            throw new IOException(String.format("Cannot read response entity: no providers found for class=%s and Content-Type=%s", someClass.getName(), type));
+            throw new IOException(String.format("no providers found for class=%s and Content-Type=%s", someClass.getName(), type));
         }
     }
 
@@ -27,9 +27,30 @@ public class JacksonUtils {
         } else if (RESTy.getXmlProvider().isReadable(reference.getClass(), reference.getType(), null, type)) {
             return RESTy.getXmlProvider().locateMapper(reference.getClass(), type).readValue(entity.getContent(), toXmlReference(reference));
         } else {
-            throw new IOException(String.format("Cannot read response entity: no providers found for class=%s and Content-Type=%s", reference.getType(), type));
+            throw new IOException(String.format("no providers found for type=%s and Content-Type=%s", reference.getType(), type));
         }
     }
+
+    public static <T> T read(String content, Class<T> someClass, MediaType type) throws IOException {
+        if (RESTy.getJsonProvider().isReadable(someClass, null, null, type)) {
+            return RESTy.getJsonProvider().locateMapper(someClass, type).readValue(content, someClass);
+        } else if (RESTy.getXmlProvider().isReadable(someClass, null, null, type)) {
+            return RESTy.getXmlProvider().locateMapper(someClass, type).readValue(content, someClass);
+        } else {
+            throw new IOException(String.format("no providers found for class=%s and Content-Type=%s", someClass.getName(), type));
+        }
+    }
+
+    public static <T> T read(String content, TypeReference<T> reference, MediaType type) throws IOException {
+        if (RESTy.getJsonProvider().isReadable(reference.getClass(), reference.getType(), null, type)) {
+            return RESTy.getJsonProvider().locateMapper(reference.getClass(), type).readValue(content, reference);
+        } else if (RESTy.getXmlProvider().isReadable(reference.getClass(), reference.getType(), null, type)) {
+            return RESTy.getXmlProvider().locateMapper(reference.getClass(), type).readValue(content, toXmlReference(reference));
+        } else {
+            throw new IOException(String.format("no providers found for type=%s and Content-Type=%s", reference.getType(), type));
+        }
+    }
+
 
     public static String write(Object object, MediaType type) throws IOException {
         if (RESTy.getJsonProvider().isWriteable(object.getClass(), null, null, type)) {
@@ -37,7 +58,7 @@ public class JacksonUtils {
         } else if (RESTy.getXmlProvider().isWriteable(object.getClass(), null, null, type)) {
             return RESTy.getXmlProvider().locateMapper(object.getClass(), type).writeValueAsString(object);
         } else {
-            throw new IOException(String.format("Cannot write request entity: no providers found for class=%s and Content-Type=%s", object.getClass(), type));
+            throw new IOException(String.format("no providers found for class=%s and Content-Type=%s", object.getClass(), type));
         }
     }
 
