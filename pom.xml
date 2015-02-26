@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.parisoft</groupId>
 	<artifactId>resty</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>RESTy</name>
 	<description>Minimalist REST client</description>
 	<url>http://parisoft.github.io/resty/</url>
