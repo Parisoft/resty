@@ -5,44 +5,48 @@
 	<artifactId>resty</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>RESTy</name>
-	<description>Minimal REST client</description>
+	<description>Minimalist REST client</description>
 
 	<dependencies>
+		<!-- Http Components -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.4</version>
+			<version>${httpcomponentes.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
-			<version>4.4</version>
+			<version>${httpcomponentes.version}</version>
 		</dependency>
+		<!-- Http Components -->
+		<!-- Jackson processor -->
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-jaxrs</artifactId>
-			<version>1.9.13</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-xc</artifactId>
-			<version>1.9.13</version>
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-json-provider</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
 			<artifactId>jackson-jaxrs-xml-provider</artifactId>
-			<version>2.4.2</version>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<version>2.0.1</version>
-		</dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-smile-provider</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-cbor-provider</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-common</artifactId>
 			<version>2.16</version>
 		</dependency>
+		<!-- Jackson processor -->
 	</dependencies>
 
 	<build>
@@ -60,5 +64,7 @@
 
 	<properties>
 		<project.build.sourceencoding>UTF-8</project.build.sourceencoding>
+		<jackson.version>2.4.5</jackson.version>
+		<httpcomponentes.version>4.4</httpcomponentes.version>
 	</properties>
 </project>

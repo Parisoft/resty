@@ -3,7 +3,8 @@ package org.parisoft.resty.response.entity;
 import java.io.IOException;
 
 import org.apache.http.Header;
-import org.codehaus.jackson.type.TypeReference;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 
 public interface EntityReader {

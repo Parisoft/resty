@@ -17,9 +17,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.GzipDecompressingEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.codehaus.jackson.type.TypeReference;
 import org.parisoft.resty.utils.JacksonUtils;
 import org.parisoft.resty.utils.MediaTypeUtils;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class EntityReaderImpl implements EntityReader {
 
