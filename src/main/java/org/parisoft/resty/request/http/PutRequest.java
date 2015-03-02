@@ -1,10 +1,10 @@
-package org.parisoft.resty.request;
+package org.parisoft.resty.request.http;
 
 import java.io.IOException;
 
 import org.parisoft.resty.Client;
 
-public class PutRequest extends PostRequest {
+public class PutRequest extends HttpRequestByEntity {
 
     PutRequest(Client client) throws IOException {
         super(client);

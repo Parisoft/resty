@@ -1,28 +1,28 @@
-package org.parisoft.resty.request;
+package org.parisoft.resty.request.http;
 
 import java.io.IOException;
 
 import org.parisoft.resty.Client;
 
-public class RequestFactory {
+public class HttpRequestFactory {
 
-    public static Request newGetRequest(Client client) {
+    public static HttpRequest newGetRequest(Client client) {
         return new GetRequest(client);
     }
 
-    public static Request newDeleteRequest(Client client) {
+    public static HttpRequest newDeleteRequest(Client client) {
         return new DeleteRequest(client);
     }
 
-    public static Request newPostRequest(Client client) throws IOException {
+    public static HttpRequest newPostRequest(Client client) throws IOException {
         return new PostRequest(client);
     }
 
-    public static Request newPutRequest(Client client) throws IOException {
+    public static HttpRequest newPutRequest(Client client) throws IOException {
         return new PutRequest(client);
     }
 
-    public static Request newRequest(String method, Client client) throws IOException {
+    public static HttpRequest newRequest(String method, Client client) throws IOException {
         if (method == null) {
             throw new IllegalArgumentException("HTTP Method cannot be null");
         }
@@ -43,7 +43,7 @@ public class RequestFactory {
             return newPutRequest(client);
 
         default:
-            return new Request(client) {
+            return new HttpRequest(client) {
 
                 @Override
                 public String getMethod() {

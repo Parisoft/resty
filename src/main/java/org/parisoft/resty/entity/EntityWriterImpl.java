@@ -1,4 +1,4 @@
-package org.parisoft.resty.request;
+package org.parisoft.resty.entity;
 
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.parisoft.resty.utils.ObjectUtils.isPrimitive;
@@ -13,14 +13,16 @@ import org.parisoft.resty.Client;
 import org.parisoft.resty.utils.JacksonUtils;
 import org.parisoft.resty.utils.MediaTypeUtils;
 
-public class PostRequest extends Request {
+public class EntityWriterImpl implements EntityWriter {
 
-    PostRequest(Client client) throws IOException {
-        super(client);
-        convertEntity();
+    private final Client client;
+
+    public EntityWriterImpl(Client client) {
+        this.client = client;
     }
 
-    private void convertEntity() throws IOException {
+    @Override
+    public HttpEntity getEntity() throws IOException {
         final Object rawEntity = client.entity();
         final HttpEntity entity;
 
@@ -32,12 +34,12 @@ public class PostRequest extends Request {
             entity = new StringEntity(rawEntity.toString());
         } else {
             final String rawType = client.headers().containsKey(CONTENT_TYPE) ? client.headers().get(CONTENT_TYPE).get(0) : null;
-            final MediaType type;
+            final MediaType contentType;
             final String entityAsString;
 
             try {
-                type = MediaTypeUtils.valueOf(rawType);
-                entityAsString = JacksonUtils.write(rawEntity, type);
+                contentType = MediaTypeUtils.valueOf(rawType);
+                entityAsString = JacksonUtils.write(rawEntity, contentType);
             } catch (Exception e) {
                 throw new IOException("Cannot write request entity: " + e.getMessage());
             }
@@ -45,11 +47,7 @@ public class PostRequest extends Request {
             entity = new StringEntity(entityAsString);
         }
 
-        setEntity(entity);
+        return entity;
     }
 
-    @Override
-    public String getMethod() {
-        return "POST";
-    }
 }

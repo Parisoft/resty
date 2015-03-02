@@ -1,114 +1,130 @@
 package org.parisoft.resty.request;
 
-import static org.parisoft.resty.utils.StringUtils.urlEncode;
-
 import java.io.IOException;
-import java.lang.reflect.Proxy;
-import java.net.URI;
-import java.util.List;
-import java.util.Map.Entry;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.HttpRequestRetryHandler;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.config.SocketConfig;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.parisoft.resty.Client;
+import org.parisoft.resty.request.http.HttpRequestFactory;
 import org.parisoft.resty.response.Response;
-import org.parisoft.resty.response.ResponseInvocationHandler;
 
-public abstract class Request extends HttpEntityEnclosingRequestBase {
+import com.fasterxml.jackson.core.type.TypeReference;
 
-    protected final Client client;
+public class Request {
 
-    Request(Client client) {
+    private final Client client;
+
+    public Request(Client client) {
         this.client = client;
-        convertConfig();
-        convertHeaders();
-        convertUri();
     }
 
-    private void convertConfig() {
-        final int timeout = client.timeout();
-
-        final RequestConfig requestConfig = RequestConfig
-                .custom()
-                .setConnectionRequestTimeout(timeout)
-                .setConnectTimeout(timeout)
-                .setSocketTimeout(timeout)
-                .build();
-
-        setConfig(requestConfig);
+    public Response get() throws IOException {
+        return HttpRequestFactory
+                .newGetRequest(client)
+                .submit();
     }
 
-    private void convertHeaders() {
-        for (Entry<String, List<String>> header : client.headers().entrySet()) {
-            final StringBuilder valueBuilder = new StringBuilder();
-
-            for (String value : header.getValue()) {
-                valueBuilder.append(value).append(", ");
-            }
-
-            valueBuilder.delete(valueBuilder.length() - 2, valueBuilder.length());
-
-            addHeader(header.getKey(), valueBuilder.toString());
-        }
+    public <T> T get(Class<T> responseClass) throws IOException {
+        return get()
+                .getEntityAs(responseClass);
     }
 
-    private void convertUri() {
-        final StringBuilder uriBuilder = new StringBuilder(client.rootPath());
-
-        for (String path : client.paths()) {
-            uriBuilder.append("/").append(urlEncode(path));
-        }
-
-        if (!client.queries().isEmpty()) {
-            uriBuilder.append("?");
-
-            for (NameValuePair pair : client.queries()) {
-                uriBuilder.append(pair.getName()).append("=").append(urlEncode(pair.getValue())).append("&");
-            }
-
-            uriBuilder.deleteCharAt(uriBuilder.length() - 1);
-        }
-
-        setURI(URI.create(uriBuilder.toString()));
+    public <T> T get(TypeReference<T> responseReference) throws IOException {
+        return get()
+                .getEntityAs(responseReference);
     }
 
-    public Response submit() throws IOException {
-        final HttpResponse httpResponse = newHttpClient().execute(this);
-
-        return proxyResponse(httpResponse);
+    public Response delete() throws IOException {
+        return HttpRequestFactory
+                .newDeleteRequest(client)
+                .submit();
     }
 
-    private HttpClient newHttpClient() {
-        final SocketConfig socketConfig = SocketConfig
-                .custom()
-                .setSoTimeout(client.timeout())
-                .build();
-
-        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setDefaultSocketConfig(socketConfig);
-        connectionManager.setValidateAfterInactivity(-1);
-
-        final HttpRequestRetryHandler retryHandler = new RequestRetryHandler(client.retries());
-
-        return HttpClientBuilder
-                .create()
-                .setRetryHandler(retryHandler)
-                .setConnectionManager(connectionManager)
-                .build();
+    public <T> T delete(Class<T> responseClass) throws IOException {
+        return delete()
+                .getEntityAs(responseClass);
     }
 
-    private Response proxyResponse(HttpResponse httpResponse) {
-        return (Response) Proxy
-                .newProxyInstance(
-                        getClass().getClassLoader(),
-                        new Class[]{ Response.class },
-                        new ResponseInvocationHandler(httpResponse));
+    public <T> T delete(TypeReference<T> responseReference) throws IOException {
+        return delete()
+                .getEntityAs(responseReference);
+    }
+
+    public Response execute(String httpMethod) throws IOException {
+        return HttpRequestFactory
+                .newRequest(httpMethod, client)
+                .submit();
+    }
+
+    public <T> T execute(String httpMethod, Class<T> responseClass) throws IOException {
+        return execute(httpMethod)
+                .getEntityAs(responseClass);
+    }
+
+    public <T> T execute(String httpMethod, TypeReference<T> responseReference) throws IOException {
+        return execute(httpMethod)
+                .getEntityAs(responseReference);
+    }
+
+    public Response post() throws IOException {
+        return HttpRequestFactory
+                .newPostRequest(client)
+                .submit();
+    }
+
+    public <T> T post(Class<T> responseClass) throws IOException {
+        return post()
+                .getEntityAs(responseClass);
+    }
+
+    public <T> T post(TypeReference<T> responseReference) throws IOException {
+        return post()
+                .getEntityAs(responseReference);
+    }
+
+    public Response post(Object entity) throws IOException {
+        client.entity(entity);
+
+        return post();
+    }
+
+    public <T> T post(Object entity, Class<T> responseClass) throws IOException {
+        return post(entity)
+                .getEntityAs(responseClass);
+    }
+
+    public <T> T post(Object entity, TypeReference<T> responseReference) throws IOException {
+        return post(entity)
+                .getEntityAs(responseReference);
+    }
+
+    public Response put() throws IOException {
+        return HttpRequestFactory
+                .newPutRequest(client)
+                .submit();
+    }
+
+    public <T> T put(Class<T> responseClass) throws IOException {
+        return put()
+                .getEntityAs(responseClass);
+    }
+
+    public <T> T put(TypeReference<T> responseReference) throws IOException {
+        return put()
+                .getEntityAs(responseReference);
+    }
+
+    public Response put(Object entity) throws IOException {
+        client.entity(entity);
+
+        return put();
+    }
+
+    public <T> T put(Object entity, Class<T> responseClass) throws IOException {
+        return put(entity)
+                .getEntityAs(responseClass);
+    }
+
+    public <T> T put(Object entity, TypeReference<T> responseReference) throws IOException {
+        return put(entity)
+                .getEntityAs(responseReference);
     }
 }

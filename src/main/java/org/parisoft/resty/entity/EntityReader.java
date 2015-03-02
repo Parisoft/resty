@@ -1,4 +1,4 @@
-package org.parisoft.resty.response.entity;
+package org.parisoft.resty.entity;
 
 import java.io.IOException;
 

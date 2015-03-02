@@ -1,4 +1,4 @@
-package org.parisoft.resty.response.entity;
+package org.parisoft.resty.entity;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.ws.rs.core.MediaType.CHARSET_PARAMETER;
