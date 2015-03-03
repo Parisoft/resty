@@ -21,7 +21,7 @@ public class JacksonUtils {
             }
         }
 
-        throw new IOException(String.format("no providers found for class=%s and Content-Type=%s", someClass.getName(), contentType));
+        throw new IOException(String.format("no processors found for class=%s and Content-Type=%s", someClass.getName(), contentType));
     }
 
     public static <T> T read(HttpEntity entity, TypeReference<T> reference, MediaType contentType) throws IOException {
@@ -33,7 +33,7 @@ public class JacksonUtils {
             }
         }
 
-        throw new IOException(String.format("no providers found for type=%s and Content-Type=%s", reference.getType(), contentType));
+        throw new IOException(String.format("no processors found for type=%s and Content-Type=%s", reference.getType(), contentType));
     }
 
     public static <T> T read(String content, Class<T> someClass, MediaType contentType) throws IOException {
@@ -45,7 +45,7 @@ public class JacksonUtils {
             }
         }
 
-        throw new IOException(String.format("no providers found for class=%s and Content-Type=%s", someClass.getName(), contentType));
+        throw new IOException(String.format("no processors found for class=%s and Content-Type=%s", someClass.getName(), contentType));
     }
 
     public static <T> T read(String content, TypeReference<T> reference, MediaType contentType) throws IOException {
@@ -57,7 +57,7 @@ public class JacksonUtils {
             }
         }
 
-        throw new IOException(String.format("no providers found for type=%s and Content-Type=%s", reference.getType(), contentType));
+        throw new IOException(String.format("no processors found for type=%s and Content-Type=%s", reference.getType(), contentType));
     }
 
 
@@ -70,6 +70,6 @@ public class JacksonUtils {
             }
         }
 
-        throw new IOException(String.format("no providers found for class=%s and Content-Type=%s", object.getClass(), contentType));
+        throw new IOException(String.format("no processors found for class=%s and Content-Type=%s", object.getClass(), contentType));
     }
 }
