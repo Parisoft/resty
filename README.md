@@ -4,7 +4,7 @@ A minimalist HTTP client made on top of [Apache HttpComponets](http://hc.apache.
 It's made to be simple and elegant by avoiding *[boilerplate code](http://en.wikipedia.org/wiki/Boilerplate_code)* and a lot of configurations.
 
 ## Get Started
-Given the [/meta](https://developer.github.com/v3/meta/) github API wich a request to https://api.github.com/meta bring a JSON like this:
+Given the [/meta](https://developer.github.com/v3/meta/) github service wich a request to https://api.github.com/meta brings a JSON like this:
 ```
 {
   "verifiable_password_authentication": true,
@@ -22,7 +22,17 @@ Given the [/meta](https://developer.github.com/v3/meta/) github API wich a reque
   ]
 }
 ```
-Create a **Meta** class to represent the JSON:
+
+Add the follow dependency to your `pom.xml`:
+```xml
+        <dependency>
+            <groupId>org.parisoft</groupId>
+            <artifactId>resty</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+```
+
+Create a `Meta` class to represent the JSON:
 ```java
 package get.started;
 
@@ -56,7 +66,8 @@ public class Meta {
     }
 }
 ```
-This code consumes the [/meta](https://developer.github.com/v3/meta/) service and writes the result into a **Meta** object:
+
+This code consumes the [/meta](https://developer.github.com/v3/meta/) service and writes the result into a `Meta` object:
 ```java
 package get.started;
 
@@ -78,9 +89,10 @@ public class Example {
     }
 }
 ```
+
 Executing the code above will print the follow result:
 ```
 Verifiable = true
 Hooks      = [192.30.252.0/22]
 ```
-###Thank you for reading
+### Thank you for reading
