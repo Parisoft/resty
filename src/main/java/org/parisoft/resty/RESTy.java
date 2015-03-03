@@ -18,7 +18,10 @@ package org.parisoft.resty;
 import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.apache.http.client.protocol.ResponseProcessCookies;
 import org.parisoft.resty.processor.DataFormat;
 
 import com.fasterxml.jackson.jaxrs.base.ProviderBase;
@@ -35,6 +38,8 @@ public class RESTy {
         dataProcessors.put(DataFormat.XML, new JacksonJaxbXMLProvider());
         dataProcessors.put(DataFormat.SMILE, new JacksonJaxbSmileProvider());
         dataProcessors.put(DataFormat.CBOR, new JacksonCBORProvider());
+
+        Logger.getLogger(ResponseProcessCookies.class.getName()).setLevel(Level.OFF);
     }
 
     public static Map<DataFormat, ProviderBase<?, ?, ?, ?>> getDataProcessors() {
