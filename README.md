@@ -78,4 +78,9 @@ public class Example {
     }
 }
 ```
+Executing the code above will print the follow result:
+```
+Verifiable = true
+Hooks      = [192.30.252.0/22]
+```
 ###Thank you for reading
