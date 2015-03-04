@@ -41,26 +41,33 @@
 <h2>
 <a id="get-started" class="anchor" href="#get-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get Started</h2>
 
-<p>Given the <a href="https://developer.github.com/v3/meta/">/meta</a> github API wich a request to <a href="https://api.github.com/meta">https://api.github.com/meta</a> bring a JSON like this:</p>
+<p>Given the <a href="https://developer.github.com/v3/meta/">/meta</a> github service wich a request to <a href="https://api.github.com/meta">https://api.github.com/meta</a> brings a JSON like this:</p>
 
-<pre><code>{
-  "verifiable_password_authentication": true,
-  "github_services_sha": "f39e3c6fa71f1c5c0e8497c28a5e7e1a4501035f",
-  "hooks": [
-    "192.30.252.0/22"
+<div class="highlight highlight-json"><pre>{
+  <span class="pl-s1"><span class="pl-pds">"</span>verifiable_password_authentication<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>,
+  <span class="pl-s1"><span class="pl-pds">"</span>github_services_sha<span class="pl-pds">"</span></span>: <span class="pl-s1"><span class="pl-pds">"</span>f39e3c6fa71f1c5c0e8497c28a5e7e1a4501035f<span class="pl-pds">"</span></span>,
+  <span class="pl-s1"><span class="pl-pds">"</span>hooks<span class="pl-pds">"</span></span>: [
+    <span class="pl-s1"><span class="pl-pds">"</span>192.30.252.0/22<span class="pl-pds">"</span></span>
   ],
-  "git": [
-    "192.30.252.0/22"
+  <span class="pl-s1"><span class="pl-pds">"</span>git<span class="pl-pds">"</span></span>: [
+    <span class="pl-s1"><span class="pl-pds">"</span>192.30.252.0/22<span class="pl-pds">"</span></span>
   ],
-  "importer": [
-    "54.221.4.64",
-    "54.205.129.240",
-    "54.227.175.200"
+  <span class="pl-s1"><span class="pl-pds">"</span>importer<span class="pl-pds">"</span></span>: [
+    <span class="pl-s1"><span class="pl-pds">"</span>54.221.4.64<span class="pl-pds">"</span></span>,
+    <span class="pl-s1"><span class="pl-pds">"</span>54.205.129.240<span class="pl-pds">"</span></span>,
+    <span class="pl-s1"><span class="pl-pds">"</span>54.227.175.200<span class="pl-pds">"</span></span>
   ]
-}
-</code></pre>
+}</pre></div>
 
-<p>Create a <strong>Meta</strong> class to represent the JSON:</p>
+<p>Add the follow dependency to your <code>pom.xml</code>:</p>
+
+<div class="highlight highlight-xml"><pre> &lt;<span class="pl-ent">dependency</span>&gt;
+     &lt;<span class="pl-ent">groupId</span>&gt;com.github.parisoft&lt;/<span class="pl-ent">groupId</span>&gt;
+     &lt;<span class="pl-ent">artifactId</span>&gt;resty&lt;/<span class="pl-ent">artifactId</span>&gt;
+     &lt;<span class="pl-ent">version</span>&gt;1.0.0&lt;/<span class="pl-ent">version</span>&gt;
+ &lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
+
+<p>Create a <code>Meta</code> class to represent the JSON:</p>
 
 <div class="highlight highlight-java"><pre><span class="pl-k">package</span> <span class="pl-smp">get.started</span>;
 
@@ -94,7 +101,7 @@
     }
 }</pre></div>
 
-<p>This code consumes the <a href="https://developer.github.com/v3/meta/">/meta</a> service and writes the result into a <strong>Meta</strong> object:</p>
+<p>This code consumes the <a href="https://developer.github.com/v3/meta/">/meta</a> service and writes the result into a <code>Meta</code> object:</p>
 
 <div class="highlight highlight-java"><pre><span class="pl-k">package</span> <span class="pl-smp">get.started</span>;
 
@@ -122,8 +129,8 @@
 Hooks      = [192.30.252.0/22]
 </code></pre>
 
-<h3>
-<a id="thank-you-for-reading" class="anchor" href="#thank-you-for-reading" aria-hidden="true"><span class="octicon octicon-link"></span></a>Thank you for reading</h3>
+<h2>
+<a id="thats-it" class="anchor" href="#thats-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>That's it</h2>
       </section>
     </div>
 
