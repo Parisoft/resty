@@ -5,7 +5,7 @@ It's made to be simple and elegant by avoiding *[boilerplate code](http://en.wik
 
 ## Get Started
 Given the [/meta](https://developer.github.com/v3/meta/) github service wich a request to https://api.github.com/meta brings a JSON like this:
-```
+```json
 {
   "verifiable_password_authentication": true,
   "github_services_sha": "f39e3c6fa71f1c5c0e8497c28a5e7e1a4501035f",
@@ -25,11 +25,11 @@ Given the [/meta](https://developer.github.com/v3/meta/) github service wich a r
 
 Add the follow dependency to your `pom.xml`:
 ```xml
-        <dependency>
-            <groupId>org.parisoft</groupId>
-            <artifactId>resty</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+ <dependency>
+     <groupId>com.github.parisoft</groupId>
+     <artifactId>resty</artifactId>
+     <version>1.0.0</version>
+ </dependency>
 ```
 
 Create a `Meta` class to represent the JSON:
@@ -95,4 +95,4 @@ Executing the code above will print the follow result:
 Verifiable = true
 Hooks      = [192.30.252.0/22]
 ```
-### Thank you for reading
+## That's it
