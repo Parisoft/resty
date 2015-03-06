@@ -63,6 +63,24 @@ public class Request {
                 .getEntityAs(responseReference);
     }
 
+    public Response execute(String httpMethod, Object entity) throws IOException {
+        client.entity(entity);
+
+        return execute(httpMethod);
+    }
+
+    public <T> T execute(String httpMethod, Object entity, Class<T> responseClass) throws IOException {
+        client.entity(entity);
+
+        return execute(httpMethod, responseClass);
+    }
+
+    public <T> T execute(String httpMethod, Object entity, TypeReference<T> responseReference) throws IOException {
+        client.entity(entity);
+
+        return execute(httpMethod, responseReference);
+    }
+
     public Response post() throws IOException {
         return HttpRequestFactory
                 .newPostRequest(client)

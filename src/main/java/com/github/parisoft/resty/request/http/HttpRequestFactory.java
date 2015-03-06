@@ -43,7 +43,7 @@ public class HttpRequestFactory {
             return newPutRequest(client);
 
         default:
-            return new HttpRequest(client) {
+            return new HttpRequestByEntity(client) {
 
                 @Override
                 public String getMethod() {
