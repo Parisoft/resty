@@ -1,7 +1,8 @@
 package com.github.parisoft.resty;
 
 import static com.github.parisoft.resty.utils.ArrayUtils.isEmpty;
-import static com.github.parisoft.resty.utils.StringUtils.splitOnSlashes;
+import static com.github.parisoft.resty.utils.StringUtils.emptyIfNull;
+import static com.github.parisoft.resty.utils.StringUtils.splitAfterSlashes;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.http.HttpHeaders.ACCEPT;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
@@ -14,11 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.ws.rs.core.MediaType;
-
 import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.github.parisoft.resty.request.Request;
@@ -43,7 +43,7 @@ public class Client {
             throw new IllegalArgumentException("Cannot create a client: URI cannot be null");
         }
 
-        path(splitOnSlashes(uri.getPath()));
+        path(emptyIfNull(uri.getPath()));
 
         try {
             query(URLEncodedUtils.parse(uri, UTF_8.name()));
@@ -89,25 +89,25 @@ public class Client {
         return entity;
     }
 
-    public Client accept(MediaType... types) {
-        if (isEmpty(types)) {
+    public Client accept(ContentType... contentTypes) {
+        if (isEmpty(contentTypes)) {
             return header(ACCEPT, NULL_VALUE);
         }
 
-        for (MediaType type : types) {
-            header(ACCEPT, type.toString());
+        for (ContentType contentType : contentTypes) {
+            header(ACCEPT, contentType.toString());
         }
 
         return this;
     }
 
-    public Client type(MediaType... types) {
-        if (isEmpty(types)) {
+    public Client type(ContentType... contentTypes) {
+        if (isEmpty(contentTypes)) {
             return header(CONTENT_TYPE, NULL_VALUE);
         }
 
-        for (MediaType type : types) {
-            header(CONTENT_TYPE, type.toString());
+        for (ContentType contentType : contentTypes) {
+            header(CONTENT_TYPE, contentType.toString());
         }
 
         return this;
@@ -200,7 +200,7 @@ public class Client {
         }
 
         for (String path : paths) {
-            this.paths.add(path);
+            this.paths.addAll(splitAfterSlashes(path));
         }
 
         return this;

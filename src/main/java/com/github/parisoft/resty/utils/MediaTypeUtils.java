@@ -1,26 +1,15 @@
 package com.github.parisoft.resty.utils;
 
-import java.io.IOException;
-
 import javax.ws.rs.core.MediaType;
 
-import org.apache.http.Header;
+import org.apache.http.entity.ContentType;
 
 public class MediaTypeUtils {
 
-    public static MediaType valueOf(Header contentType) throws IOException {
-        return valueOf(contentType.getValue());
-    }
+    public static MediaType valueOf(ContentType contentType) {
+        final String[] mime = StringUtils.splitOnSlashes(contentType.getMimeType());
+        final String charset = contentType.getCharset() != null ? contentType.getCharset().toString() : null;
 
-    public static MediaType valueOf(String contentType) throws IOException {
-        if (contentType == null) {
-            throw new IOException("Content-Type cannot be null");
-        }
-
-        try {
-            return MediaType.valueOf(contentType);
-        } catch (Exception e) {
-            throw new IOException("unknown Content-Type=" + contentType);
-        }
+        return new MediaType(mime[0], mime[1], charset);
     }
 }

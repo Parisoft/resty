@@ -1,8 +1,10 @@
 package com.github.parisoft.resty.entity;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.apache.http.Header;
+import org.apache.http.entity.ContentType;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -22,9 +24,9 @@ public interface EntityReader {
      * @param entity The HTTP entity to get the charset
      * @return the charset of a given HTTP entity
      */
-    public String getContentCharSet();
+    public Charset getContentCharSet();
 
-    public Header getContentType();
+    public ContentType getContentType();
 
     /**
      * @param entity The HTTP entity to get the encoding

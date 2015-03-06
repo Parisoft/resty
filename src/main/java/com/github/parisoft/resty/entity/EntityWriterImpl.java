@@ -8,6 +8,7 @@ import java.io.IOException;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 
 import com.github.parisoft.resty.Client;
@@ -25,27 +26,25 @@ public class EntityWriterImpl implements EntityWriter {
     @Override
     public HttpEntity getEntity() throws IOException {
         final Object rawEntity = client.entity();
+        final String rawType = client.headers().containsKey(CONTENT_TYPE) ? client.headers().get(CONTENT_TYPE).get(0) : null;
         final HttpEntity entity;
 
-        if (rawEntity == null || rawEntity instanceof HttpEntity) {
-            entity = (HttpEntity) rawEntity;
-        } else if (rawEntity instanceof String) {
-            entity = new StringEntity((String) rawEntity);
-        } else if (isPrimitive(rawEntity)) {
-            entity = new StringEntity(rawEntity.toString());
-        } else {
-            final String rawType = client.headers().containsKey(CONTENT_TYPE) ? client.headers().get(CONTENT_TYPE).get(0) : null;
-            final MediaType contentType;
-            final String entityAsString;
+        try {
+            if (rawEntity == null || rawEntity instanceof HttpEntity) {
+                entity = (HttpEntity) rawEntity;
+            } else if (rawEntity instanceof String || isPrimitive(rawEntity)) {
+                final ContentType contentType = (rawType == null) ? null : ContentType.parse(rawType);
 
-            try {
-                contentType = MediaTypeUtils.valueOf(rawType);
-                entityAsString = JacksonUtils.write(rawEntity, contentType);
-            } catch (Exception e) {
-                throw new IOException("Cannot write request entity: " + e.getMessage());
+                entity = new StringEntity(rawEntity.toString(), contentType);
+            } else {
+                final ContentType contentType = ContentType.parse(rawType);
+                final MediaType mediaType = MediaTypeUtils.valueOf(contentType);
+                final String entityAsString = JacksonUtils.write(rawEntity, mediaType);
+
+                entity = new StringEntity(entityAsString, contentType);
             }
-
-            entity = new StringEntity(entityAsString);
+        } catch (Exception e) {
+            throw new IOException("Cannot write request entity: " + e.getMessage());
         }
 
         return entity;
