@@ -101,16 +101,12 @@ public class Client {
         return this;
     }
 
-    public Client type(ContentType... contentTypes) {
-        if (isEmpty(contentTypes)) {
+    public Client type(ContentType contentType) {
+        if (contentType == null) {
             return header(CONTENT_TYPE, NULL_VALUE);
         }
 
-        for (ContentType contentType : contentTypes) {
-            header(CONTENT_TYPE, contentType.toString());
-        }
-
-        return this;
+        return header(CONTENT_TYPE, contentType.toString());
     }
 
     public Client cookie(HttpCookie... cookies) {
