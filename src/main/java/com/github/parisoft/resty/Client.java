@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.MediaType;
+
 import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -22,6 +25,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.github.parisoft.resty.request.Request;
+import com.github.parisoft.resty.utils.CookieUtils;
 
 public class Client {
     private static final String NULL_VALUE = null;
@@ -55,7 +59,7 @@ public class Client {
 
     private static URI pathToUri(String path) {
         if (path == null) {
-            throw new IllegalArgumentException("basic path cannot be null");
+            throw new IllegalArgumentException("Cannot create a client: basic path cannot be null");
         }
 
         return URI.create(path);
@@ -101,6 +105,18 @@ public class Client {
         return this;
     }
 
+    public Client accept(MediaType... mediaTypes) {
+        if (isEmpty(mediaTypes)) {
+            return header(ACCEPT, NULL_VALUE);
+        }
+
+        for (MediaType mediaType : mediaTypes) {
+            header(ACCEPT, mediaType.toString());
+        }
+
+        return this;
+    }
+
     public Client type(ContentType contentType) {
         if (contentType == null) {
             return header(CONTENT_TYPE, NULL_VALUE);
@@ -109,50 +125,24 @@ public class Client {
         return header(CONTENT_TYPE, contentType.toString());
     }
 
+    public Client type(MediaType mediaType) {
+        if (mediaType == null) {
+            return header(CONTENT_TYPE, NULL_VALUE);
+        }
+
+        return header(CONTENT_TYPE, mediaType.toString());
+    }
+
     public Client cookie(HttpCookie... cookies) {
-        if (isEmpty(cookies)) {
-            return header("Cookie", NULL_VALUE);
-        }
+        return header("Cookie", CookieUtils.toString(cookies));
+    }
 
-        final StringBuilder cookieBuilder = new StringBuilder();
+    public Client cookie(Cookie... cookies) {
+        return header("Cookie", CookieUtils.toString(cookies));
+    }
 
-        for (HttpCookie cookie : cookies) {
-            cookieBuilder.append(cookie.getName()).append("=").append(cookie.getValue());
-
-            if (cookie.getComment() != null) {
-                cookieBuilder.append(";").append("Comment=").append(cookie.getComment());
-            }
-
-            if (cookie.getDomain() != null) {
-                cookieBuilder.append(";").append("Domain=").append(cookie.getDomain());
-            }
-
-            if (cookie.getPath() != null) {
-                cookieBuilder.append(";").append("Path=").append(cookie.getPath());
-            }
-
-            if (cookie.getSecure()) {
-                cookieBuilder.append(";").append("Secure");
-            }
-
-            if (cookie.isHttpOnly()) {
-                cookieBuilder.append(";").append("HttpOnly");
-            }
-
-            if (cookie.getVersion() > 0) {
-                cookieBuilder.append(";").append("Version=").append(cookie.getVersion());
-            }
-
-            if (cookie.hasExpired()) {
-                cookieBuilder.append(";").append("Max-Age=0");
-            } else {
-                cookieBuilder.append(";").append("Max-Age=").append(cookie.getMaxAge());
-            }
-
-            cookieBuilder.append(", ");
-        }
-
-        return header("Cookie", cookieBuilder.deleteCharAt(cookieBuilder.length() - 1).toString());
+    public Client cookie(org.apache.http.cookie.Cookie... cookies) {
+        return header("Cookie", CookieUtils.toString(cookies));
     }
 
     public Client cookie(String cookieAsString) {
