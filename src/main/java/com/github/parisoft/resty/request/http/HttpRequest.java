@@ -8,36 +8,30 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.net.ssl.SSLContext;
-
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.config.SocketConfig;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.ssl.SSLContexts;
 
-import com.github.parisoft.resty.Client;
-import com.github.parisoft.resty.request.RequestRetryHandler;
-import com.github.parisoft.resty.request.ssl.BypassTrustStrategy;
+import com.github.parisoft.resty.client.Client;
+import com.github.parisoft.resty.entity.EntityWriterImpl;
 import com.github.parisoft.resty.response.Response;
 import com.github.parisoft.resty.response.ResponseInvocationHandler;
 
-public abstract class HttpRequest extends HttpEntityEnclosingRequestBase {
+public class HttpRequest extends HttpEntityEnclosingRequestBase {
 
     protected final Client client;
+    protected final String method;
 
-    HttpRequest(Client client) {
+    public HttpRequest(Client client, String method) throws IOException {
         this.client = client;
+        this.method = method;
         constructConfig();
         constructHeaders();
         constructUri();
+        constructEntity();
     }
 
     private void constructConfig() {
@@ -88,47 +82,28 @@ public abstract class HttpRequest extends HttpEntityEnclosingRequestBase {
         setURI(URI.create(uriBuilder.toString()));
     }
 
+    private void constructEntity() throws IOException {
+        final HttpEntity entity = new EntityWriterImpl(client).getEntity();
+        setEntity(entity);
+    }
+
     public Response submit() throws IOException {
-        final HttpResponse httpResponse = newHttpClient().execute(this);
+        final HttpResponse httpResponse = client
+                .toHttpClient()
+                .execute(this);
 
         return proxyResponse(httpResponse);
     }
 
-    private HttpClient newHttpClient() throws IOException {
-        final SocketConfig socketConfig = SocketConfig
-                .custom()
-                .setSoTimeout(client.timeout())
-                .build();
-
-
-        final SSLContext sslContext;
-
-        try {
-            sslContext = SSLContexts
-                    .custom()
-                    .loadTrustMaterial(new BypassTrustStrategy())
-                    .useProtocol(SSLConnectionSocketFactory.TLS)
-                    .build();
-        } catch (Exception e) {
-            throw new IOException("Cannot create bypassed SSL context", e);
-        }
-
-        final HttpRequestRetryHandler retryHandler = new RequestRetryHandler(client.retries());
-
-        return HttpClientBuilder
-                .create()
-                .setRetryHandler(retryHandler)
-                .setDefaultSocketConfig(socketConfig)
-                .setSslcontext(sslContext)
-                .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-                .build();
+    private Response proxyResponse(HttpResponse httpResponse) {
+        return (Response) Proxy.newProxyInstance(
+                getClass().getClassLoader(),
+                new Class[]{ Response.class },
+                new ResponseInvocationHandler(httpResponse));
     }
 
-    private Response proxyResponse(HttpResponse httpResponse) {
-        return (Response) Proxy
-                .newProxyInstance(
-                        getClass().getClassLoader(),
-                        new Class[]{ Response.class },
-                        new ResponseInvocationHandler(httpResponse));
+    @Override
+    public String getMethod() {
+        return method;
     }
 }

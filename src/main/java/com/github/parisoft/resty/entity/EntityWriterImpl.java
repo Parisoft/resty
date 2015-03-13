@@ -11,7 +11,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 
-import com.github.parisoft.resty.Client;
+import com.github.parisoft.resty.client.Client;
 import com.github.parisoft.resty.utils.JacksonUtils;
 import com.github.parisoft.resty.utils.MediaTypeUtils;
 

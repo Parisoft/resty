@@ -7,6 +7,8 @@ import org.apache.http.HttpResponse;
 
 import com.github.parisoft.resty.entity.EntityReader;
 import com.github.parisoft.resty.entity.EntityReaderImpl;
+import com.github.parisoft.resty.response.http.HttpResponseExtension;
+import com.github.parisoft.resty.response.http.HttpResponseExtensionImpl;
 
 public class ResponseInvocationHandler implements InvocationHandler {
 

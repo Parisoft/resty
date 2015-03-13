@@ -28,6 +28,7 @@ import com.fasterxml.jackson.jaxrs.cbor.JacksonCBORProvider;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.fasterxml.jackson.jaxrs.smile.JacksonJaxbSmileProvider;
 import com.fasterxml.jackson.jaxrs.xml.JacksonJaxbXMLProvider;
+import com.github.parisoft.resty.client.Client;
 import com.github.parisoft.resty.processor.DataFormat;
 
 public class RESTy {

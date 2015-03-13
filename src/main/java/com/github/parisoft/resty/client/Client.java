@@ -1,4 +1,4 @@
-package com.github.parisoft.resty;
+package com.github.parisoft.resty.client;
 
 import static com.github.parisoft.resty.utils.ArrayUtils.isEmpty;
 import static com.github.parisoft.resty.utils.StringUtils.emptyIfNull;
@@ -7,6 +7,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.http.HttpHeaders.ACCEPT;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 
+import java.io.IOException;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.util.ArrayList;
@@ -15,16 +16,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContexts;
 
 import com.github.parisoft.resty.request.Request;
+import com.github.parisoft.resty.request.RequestRetryHandler;
+import com.github.parisoft.resty.request.ssl.BypassTrustStrategy;
 import com.github.parisoft.resty.utils.CookieUtils;
 
 public class Client {
@@ -36,13 +48,14 @@ public class Client {
     private String rootPath;
     private int retries = 0;
     private int timeout = 0;
+    private boolean bypassSSL = true;
     private Object entity;
 
-    Client(String baseAddress) {
+    public Client(String baseAddress) {
         this(pathToUri(baseAddress));
     }
 
-    Client(URI uri) {
+    public Client(URI uri) {
         if (uri == null) {
             throw new IllegalArgumentException("Cannot create a client: URI cannot be null");
         }
@@ -87,6 +100,10 @@ public class Client {
 
     public int timeout() {
         return timeout;
+    }
+
+    public boolean bypassSSL() {
+        return bypassSSL;
     }
 
     public Object entity() {
@@ -204,6 +221,12 @@ public class Client {
         return this;
     }
 
+    public Client bypassSSL(boolean bypassSSL) {
+        this.bypassSSL = bypassSSL;
+
+        return this;
+    }
+
     public Client entity(Object entity) {
         this.entity = entity;
 
@@ -212,5 +235,43 @@ public class Client {
 
     public Request request() {
         return new Request(this);
+    }
+
+    public HttpClient toHttpClient() throws IOException {
+        final SocketConfig socketConfig = SocketConfig
+                .custom()
+                .setSoTimeout(timeout)
+                .build();
+
+
+        final SSLContext sslContext;
+        final HostnameVerifier hostnameVerifier;
+
+        if (bypassSSL) {
+            hostnameVerifier = NoopHostnameVerifier.INSTANCE;
+
+            try {
+                sslContext = SSLContexts
+                        .custom()
+                        .loadTrustMaterial(new BypassTrustStrategy())
+                        .useProtocol(SSLConnectionSocketFactory.TLS)
+                        .build();
+            } catch (Exception e) {
+                throw new IOException("Cannot create bypassed SSL context", e);
+            }
+        } else {
+            sslContext = SSLContexts.createSystemDefault();
+            hostnameVerifier = null;
+        }
+
+        final HttpRequestRetryHandler retryHandler = new RequestRetryHandler(retries);
+
+        return HttpClientBuilder
+                .create()
+                .setRetryHandler(retryHandler)
+                .setDefaultSocketConfig(socketConfig)
+                .setSslcontext(sslContext)
+                .setSSLHostnameVerifier(hostnameVerifier)
+                .build();
     }
 }

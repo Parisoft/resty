@@ -1,8 +1,10 @@
-package com.github.parisoft.resty.response;
+package com.github.parisoft.resty.response.http;
 
 import java.io.IOException;
 import java.net.HttpCookie;
 import java.util.List;
+
+import com.github.parisoft.resty.response.Response;
 
 
 public interface HttpResponseExtension {
