@@ -11,22 +11,22 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 
-import com.github.parisoft.resty.client.Client;
+import com.github.parisoft.resty.request.Request;
 import com.github.parisoft.resty.utils.JacksonUtils;
 import com.github.parisoft.resty.utils.MediaTypeUtils;
 
 public class EntityWriterImpl implements EntityWriter {
 
-    private final Client client;
+    private final Request request;
 
-    public EntityWriterImpl(Client client) {
-        this.client = client;
+    public EntityWriterImpl(Request request) {
+        this.request = request;
     }
 
     @Override
     public HttpEntity getEntity() throws IOException {
-        final Object rawEntity = client.entity();
-        final String rawType = client.headers().containsKey(CONTENT_TYPE) ? client.headers().get(CONTENT_TYPE).get(0) : null;
+        final Object rawEntity = request.entity();
+        final String rawType = request.headers().containsKey(CONTENT_TYPE) ? request.headers().get(CONTENT_TYPE).get(0) : null;
         final HttpEntity entity;
 
         try {

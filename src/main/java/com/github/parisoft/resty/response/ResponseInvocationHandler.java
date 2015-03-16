@@ -1,6 +1,7 @@
 package com.github.parisoft.resty.response;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.http.HttpResponse;
@@ -26,17 +27,21 @@ public class ResponseInvocationHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         final Class<?> declaringClass = method.getDeclaringClass();
 
-        if (declaringClass.isAssignableFrom(HttpResponse.class)) {
-            return method.invoke(httpResponse, args);
-        }
+        try {
+            if (declaringClass.isAssignableFrom(HttpResponse.class)) {
+                return method.invoke(httpResponse, args);
+            }
 
-        if (declaringClass.isAssignableFrom(EntityReader.class)) {
-            return method.invoke(entityReader, args);
-        }
+            if (declaringClass.isAssignableFrom(EntityReader.class)) {
+                return method.invoke(entityReader, args);
+            }
 
-        if (declaringClass.isAssignableFrom(HttpResponseExtension.class)) {
-            responseExtension.setResponse((Response) proxy);
-            return method.invoke(responseExtension, args);
+            if (declaringClass.isAssignableFrom(HttpResponseExtension.class)) {
+                responseExtension.setResponse((Response) proxy);
+                return method.invoke(responseExtension, args);
+            }
+        } catch (InvocationTargetException e) {
+            throw e.getCause();
         }
 
         return null;

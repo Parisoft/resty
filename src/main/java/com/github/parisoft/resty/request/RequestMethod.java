@@ -2,8 +2,8 @@ package com.github.parisoft.resty.request;
 
 /**
  * The request method token is the primary source of request semantics;
- * it indicates the purpose for which the client has made this request
- * and what is expected by the client as a successful result.
+ * it indicates the purpose for which the request has made this request
+ * and what is expected by the request as a successful result.
  *
  * @see <a href=https://tools.ietf.org/html/rfc7231#section-4.1>RFC 7231</a>
  * @author Andre Paris

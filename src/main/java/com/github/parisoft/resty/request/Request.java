@@ -1,232 +1,200 @@
 package com.github.parisoft.resty.request;
 
-import static com.github.parisoft.resty.request.RequestMethod.DELETE;
-import static com.github.parisoft.resty.request.RequestMethod.GET;
-import static com.github.parisoft.resty.request.RequestMethod.HEAD;
-import static com.github.parisoft.resty.request.RequestMethod.OPTIONS;
-import static com.github.parisoft.resty.request.RequestMethod.POST;
-import static com.github.parisoft.resty.request.RequestMethod.PUT;
-import static com.github.parisoft.resty.request.RequestMethod.TRACE;
+import static com.github.parisoft.resty.utils.ArrayUtils.isEmpty;
+import static com.github.parisoft.resty.utils.StringUtils.emptyIfNull;
+import static com.github.parisoft.resty.utils.StringUtils.splitAfterSlashes;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.http.HttpHeaders.ACCEPT;
+import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 
 import java.io.IOException;
+import java.net.HttpCookie;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.MediaType;
+
+import org.apache.http.HttpHeaders;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.ContentType;
+import org.apache.http.message.BasicNameValuePair;
+
 import com.github.parisoft.resty.client.Client;
-import com.github.parisoft.resty.request.http.HttpRequest;
-import com.github.parisoft.resty.response.Response;
+import com.github.parisoft.resty.utils.CookieUtils;
 
 public class Request {
 
-    private final Client client;
+    private static final String NULL_VALUE = null;
 
-    public Request(Client client) {
-        this.client = client;
+    private Map<String, List<String>> headers = new HashMap<>();
+    private List<NameValuePair> queries = new ArrayList<>();
+    private List<String> paths = new ArrayList<>();
+    private Object entity;
+    URI rootUri;
+
+    public Request(String uri) {
+        this(stringToUri(uri));
     }
 
-    public Response get() throws IOException {
-        return execute(GET);
+    public Request(URI uri) {
+        if (uri == null) {
+            throw new IllegalArgumentException("Cannot create a request: URI cannot be null");
+        }
+
+        path(emptyIfNull(uri.getPath()));
+
+        try {
+            query(URLEncodedUtils.parse(uri, UTF_8.name()));
+            rootUri = new URI(uri.getScheme(), uri.getUserInfo(), uri.getHost(), uri.getPort(), null, null, uri.getFragment());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Cannot create a request: " + e.getMessage());
+        }
     }
 
-    public <T> T get(Class<T> responseClass) throws IOException {
-        return get()
-                .getEntityAs(responseClass);
+    private static URI stringToUri(String string) {
+        if (string == null) {
+            throw new IllegalArgumentException("Cannot create a request: URI cannot be null");
+        }
+
+        return URI.create(string);
     }
 
-    public <T> T get(TypeReference<T> responseReference) throws IOException {
-        return get()
-                .getEntityAs(responseReference);
+    public Map<String, List<String>> headers() {
+        return headers;
     }
 
-    public Response head() throws IOException {
-        return execute(HEAD);
+    public List<String> paths() {
+        return paths;
     }
 
-    public <T> T head(Class<T> responseClass) throws IOException {
-        return head()
-                .getEntityAs(responseClass);
+    public List<NameValuePair> queries() {
+        return queries;
     }
 
-    public <T> T head(TypeReference<T> responseReference) throws IOException {
-        return head()
-                .getEntityAs(responseReference);
+    public Object entity() {
+        return entity;
     }
 
+    public Request accept(ContentType... contentTypes) {
+        if (isEmpty(contentTypes)) {
+            return header(ACCEPT, NULL_VALUE);
+        }
 
-    public Response delete() throws IOException {
-        return execute(DELETE);
+        for (ContentType contentType : contentTypes) {
+            header(ACCEPT, contentType.toString());
+        }
+
+        return this;
     }
 
-    public <T> T delete(Class<T> responseClass) throws IOException {
-        return delete()
-                .getEntityAs(responseClass);
+    public Request accept(MediaType... mediaTypes) {
+        if (isEmpty(mediaTypes)) {
+            return header(ACCEPT, NULL_VALUE);
+        }
+
+        for (MediaType mediaType : mediaTypes) {
+            header(ACCEPT, mediaType.toString());
+        }
+
+        return this;
     }
 
-    public <T> T delete(TypeReference<T> responseReference) throws IOException {
-        return delete()
-                .getEntityAs(responseReference);
+    public Request type(ContentType contentType) {
+        if (contentType == null) {
+            return header(CONTENT_TYPE, NULL_VALUE);
+        }
+
+        return header(CONTENT_TYPE, contentType.toString());
     }
 
-    public Response post() throws IOException {
-        return execute(POST);
+    public Request type(MediaType mediaType) {
+        if (mediaType == null) {
+            return header(CONTENT_TYPE, NULL_VALUE);
+        }
+
+        return header(CONTENT_TYPE, mediaType.toString());
     }
 
-    public <T> T post(Class<T> responseClass) throws IOException {
-        return post()
-                .getEntityAs(responseClass);
+    public Request cookie(HttpCookie... cookies) {
+        return header("Cookie", CookieUtils.toString(cookies));
     }
 
-    public <T> T post(TypeReference<T> responseReference) throws IOException {
-        return post()
-                .getEntityAs(responseReference);
+    public Request cookie(Cookie... cookies) {
+        return header("Cookie", CookieUtils.toString(cookies));
     }
 
-    public Response post(Object entity) throws IOException {
-        client.entity(entity);
-
-        return post();
+    public Request cookie(org.apache.http.cookie.Cookie... cookies) {
+        return header("Cookie", CookieUtils.toString(cookies));
     }
 
-    public <T> T post(Object entity, Class<T> responseClass) throws IOException {
-        return post(entity)
-                .getEntityAs(responseClass);
+    public Request cookie(String cookieAsString) {
+        return header("Cookie", cookieAsString);
     }
 
-    public <T> T post(Object entity, TypeReference<T> responseReference) throws IOException {
-        return post(entity)
-                .getEntityAs(responseReference);
+    public Request header(HttpHeaders name, String... values) {
+        return header(name.toString(), values);
     }
 
-    public Response put() throws IOException {
-        return execute(PUT);
+    public Request header(String name, String... values) {
+        if (isEmpty(values)) {
+            headers.remove(name);
+            return this;
+        }
+
+        for (String value : values) {
+            final List<String> valueList = headers.containsKey(name) ? headers.get(name) : new ArrayList<String>();
+            valueList.add(value);
+            headers.put(name, valueList);
+        }
+
+        return this;
     }
 
-    public <T> T put(Class<T> responseClass) throws IOException {
-        return put()
-                .getEntityAs(responseClass);
+    public Request query(List<NameValuePair> nameValuePairs) {
+        queries.addAll(nameValuePairs);
+
+        return this;
     }
 
-    public <T> T put(TypeReference<T> responseReference) throws IOException {
-        return put()
-                .getEntityAs(responseReference);
+    public Request query(String name, String value) {
+        queries.add(new BasicNameValuePair(name, value));
+
+        return this;
     }
 
-    public Response put(Object entity) throws IOException {
-        client.entity(entity);
+    public Request path(String... paths) {
+        if (isEmpty(paths)) {
+            throw new IllegalArgumentException("Cannot crate a request: path cannot be null");
+        }
 
-        return put();
+        for (String path : paths) {
+            this.paths.addAll(splitAfterSlashes(path));
+        }
+
+        return this;
     }
 
-    public <T> T put(Object entity, Class<T> responseClass) throws IOException {
-        return put(entity)
-                .getEntityAs(responseClass);
+    public Request entity(Object entity) {
+        this.entity = entity;
+
+        return this;
     }
 
-    public <T> T put(Object entity, TypeReference<T> responseReference) throws IOException {
-        return put(entity)
-                .getEntityAs(responseReference);
-    }
-
-    public Response options() throws IOException {
-        return execute(OPTIONS);
-    }
-
-    public <T> T options(Class<T> responseClass) throws IOException {
-        return options()
-                .getEntityAs(responseClass);
-    }
-
-    public <T> T options(TypeReference<T> responseReference) throws IOException {
-        return options()
-                .getEntityAs(responseReference);
-    }
-
-    public Response trace() throws IOException {
-        return execute(TRACE);
-    }
-
-    public <T> T trace(Class<T> responseClass) throws IOException {
-        return trace()
-                .getEntityAs(responseClass);
-    }
-
-    public <T> T trace(TypeReference<T> responseReference) throws IOException {
-        return trace()
-                .getEntityAs(responseReference);
-    }
-
-    public Response execute(RequestMethod requestMethod) throws IOException {
-        return toHttpRequest(requestMethod)
-                .submit();
-    }
-
-    public <T> T execute(RequestMethod requestMethod, Class<T> responseClass) throws IOException {
-        return execute(requestMethod)
-                .getEntityAs(responseClass);
-    }
-
-    public <T> T execute(RequestMethod requestMethod, TypeReference<T> responseReference) throws IOException {
-        return execute(requestMethod)
-                .getEntityAs(responseReference);
-    }
-
-    public Response execute(RequestMethod requestMethod, Object entity) throws IOException {
-        client.entity(entity);
-
-        return execute(requestMethod);
-    }
-
-    public <T> T execute(RequestMethod requestMethod, Object entity, Class<T> responseClass) throws IOException {
-        client.entity(entity);
-
-        return execute(requestMethod, responseClass);
-    }
-
-    public <T> T execute(RequestMethod requestMethod, Object entity, TypeReference<T> responseReference) throws IOException {
-        client.entity(entity);
-
-        return execute(requestMethod, responseReference);
-    }
-
-
-    public Response execute(String requestMethod) throws IOException {
-        return toHttpRequest(requestMethod)
-                .submit();
-    }
-
-    public <T> T execute(String requestMethod, Class<T> responseClass) throws IOException {
-        return execute(requestMethod)
-                .getEntityAs(responseClass);
-    }
-
-    public <T> T execute(String requestMethod, TypeReference<T> responseReference) throws IOException {
-        return execute(requestMethod)
-                .getEntityAs(responseReference);
-    }
-
-    public Response execute(String requestMethod, Object entity) throws IOException {
-        client.entity(entity);
-
-        return execute(requestMethod);
-    }
-
-    public <T> T execute(String requestMethod, Object entity, Class<T> responseClass) throws IOException {
-        client.entity(entity);
-
-        return execute(requestMethod, responseClass);
-    }
-
-    public <T> T execute(String requestMethod, Object entity, TypeReference<T> responseReference) throws IOException {
-        client.entity(entity);
-
-        return execute(requestMethod, responseReference);
+    public Client client() {
+        return new Client(this);
     }
 
     public HttpRequest toHttpRequest(RequestMethod method) throws IOException {
-        return new HttpRequest(client, methodToString(method));
+        return new HttpRequest(this, methodToString(method));
     }
 
     public HttpRequest toHttpRequest(String method) throws IOException {
-        return new HttpRequest(client, methodToString(method));
+        return new HttpRequest(this, methodToString(method));
     }
 
     private String methodToString(Object methodObject) {

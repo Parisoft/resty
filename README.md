@@ -79,9 +79,9 @@ public class Example {
 
     public static void main(String[] args) throws IOException {
 
-        Meta meta = RESTy.client("https://api.github.com")
+        Meta meta = RESTy.request("https://api.github.com")
                 .path("meta")
-                .request()
+                .client()
                 .get(Meta.class);
 
         System.out.println("Verifiable = " + meta.isVerifiable());

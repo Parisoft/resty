@@ -28,8 +28,8 @@ import com.fasterxml.jackson.jaxrs.cbor.JacksonCBORProvider;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.fasterxml.jackson.jaxrs.smile.JacksonJaxbSmileProvider;
 import com.fasterxml.jackson.jaxrs.xml.JacksonJaxbXMLProvider;
-import com.github.parisoft.resty.client.Client;
 import com.github.parisoft.resty.processor.DataFormat;
+import com.github.parisoft.resty.request.Request;
 
 public class RESTy {
 
@@ -51,11 +51,11 @@ public class RESTy {
         return dataProcessors.get(dataFormat);
     }
 
-    public static Client client(String baseAddress) {
-        return new Client(baseAddress);
+    public static Request request(String uri) {
+        return new Request(uri);
     }
 
-    public static Client client(URI uri) {
-        return new Client(uri);
+    public static Request request(URI uri) {
+        return new Request(uri);
     }
 }

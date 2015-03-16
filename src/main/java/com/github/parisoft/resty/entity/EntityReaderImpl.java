@@ -165,4 +165,11 @@ public class EntityReaderImpl implements EntityReader {
 
         return new BasicHeader(CONTENT_ENCODING, "");
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        System.err.println("fim");
+        EntityUtils.consumeQuietly(httpResponse.getEntity());
+        super.finalize();
+    }
 }
