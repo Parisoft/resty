@@ -176,6 +176,21 @@ public class Request {
             this.paths.addAll(splitAfterSlashes(path));
         }
 
+        if (!this.paths.isEmpty()) {
+            final List<String> normalized = new ArrayList<String>();
+
+            for (int i = 0; i < this.paths.size() - 1; i++) {
+                if (!this.paths.get(i).isEmpty()) {
+                    normalized.add(this.paths().get(i));
+                }
+            }
+
+            normalized.add(this.paths.get(this.paths.size() - 1));
+
+            this.paths.clear();
+            this.paths.addAll(normalized);
+        }
+
         return this;
     }
 

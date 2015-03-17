@@ -1,0 +1,24 @@
+{
+    "name": "Chevrolet Caprice",
+    "production": "1965-1970",
+    "bodies": [
+        {
+            "style": "coupe",
+            "doors": 2
+        },
+        {
+            "style": "hardtop",
+            "door": 4
+        }
+    ],
+    "engines": [
+        {
+            "cid": 283,
+            "size": "small-block v8"
+        },
+        {
+            "cid": "427",
+            "size": "big-block v8"
+        }
+    ]
+}

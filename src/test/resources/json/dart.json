@@ -1,0 +1,24 @@
+{
+    "name": "Dodge Dart",
+    "production": "1967-1976",
+    "bodies": [
+        {
+            "style": "coupe",
+            "doors": 2
+        },
+        {
+            "style": "sedan",
+            "door": 4
+        }
+    ],
+    "engines": [
+        {
+            "cid": 318,
+            "size": "small-block v8"
+        },
+        {
+            "cid": "426",
+            "size": "big-block v8"
+        }
+    ]
+}

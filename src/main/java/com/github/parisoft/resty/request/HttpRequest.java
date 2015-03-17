@@ -1,16 +1,13 @@
 package com.github.parisoft.resty.request;
 
-import static com.github.parisoft.resty.utils.StringUtils.urlEncode;
-
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.utils.URIBuilder;
 
 import com.github.parisoft.resty.entity.EntityWriterImpl;
 
@@ -50,30 +47,16 @@ public class HttpRequest extends HttpEntityEnclosingRequestBase {
             final StringBuilder pathBuilder = new StringBuilder();
 
             for (String requestPath : request.paths()) {
-                pathBuilder.append("/").append(urlEncode(requestPath));
+                pathBuilder.append("/").append(requestPath);
             }
 
             path = pathBuilder.toString();
         }
 
-        final String query;
-
-        if (request.queries().isEmpty()) {
-            query = null;
-        } else {
-            final StringBuilder queryBuilder = new StringBuilder();
-
-            for (NameValuePair pair : request.queries()) {
-                queryBuilder.append(pair.getName()).append("=").append(urlEncode(pair.getValue())).append("&");
-            }
-
-            query = queryBuilder.deleteCharAt(queryBuilder.length() - 1).toString();
-        }
-
-        final URI rootUri = request.rootUri;
-
         try {
-            setURI(new URI(rootUri.getScheme(), rootUri.getUserInfo(), rootUri.getHost(), rootUri.getPort(), path, query, rootUri.getFragment()));
+            setURI(request.queries().isEmpty()
+                    ? new URIBuilder(request.rootUri).setPath(path).build()
+                            : new URIBuilder(request.rootUri).setPath(path).setParameters(request.queries()).build());
         } catch (URISyntaxException e) {
             throw new IOException("Cannot create the request URI", e);
         }

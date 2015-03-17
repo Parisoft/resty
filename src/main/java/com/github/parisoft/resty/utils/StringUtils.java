@@ -1,7 +1,5 @@
 package com.github.parisoft.resty.utils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,14 +16,6 @@ public class StringUtils {
 
     public static String removeLeadingSlashes(String string) {
         return TRAILING_SLASHES_PATTERN.matcher(string).replaceFirst(EMPTY_STRING);
-    }
-
-    public static String urlEncode(String string) {
-        try {
-            return URLEncoder.encode(string, "UTF-8").replaceAll("\\+", "%20");
-        } catch (UnsupportedEncodingException e) {
-            return string;
-        }
     }
 
     public static boolean isEmpty(String string) {
@@ -50,6 +40,10 @@ public class StringUtils {
         }
 
         final List<String> split = new ArrayList<>(indexes.size() / 2);
+
+        if (indexes.get(0) > 0) {
+            split.add(string.substring(0, indexes.get(0)));
+        }
 
         for (int i = 1; i < indexes.size(); i += 2) {
             final int ini = indexes.get(i);
