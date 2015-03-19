@@ -1,7 +1,8 @@
-package com.github.parisoft.resty.feature.client.get;
+package com.github.parisoft.resty.feature.client.post;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.entity.ContentType;
@@ -13,72 +14,100 @@ import com.github.parisoft.resty.server.LocalServer;
 import com.github.parisoft.resty.server.domain.Car;
 
 import cucumber.api.java.Before;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class GetStepDefs {
+public class PostStepDefs {
 
     private Response actualResponse;
     private Car actualCar;
     private List<Car> actualCarList;
+
+    private Object entity;
 
     @Before
     public void before() {
         LocalServer.start();
     }
 
-    @When("^do a GET request to \"(.*?)\" for a Response instance from json$")
+    @Given("^an entity as a \"(.*?)\" and a \"(.*?)\" list$")
+    public void an_entity_as_a_and_a_list(String carName1, String carName2) throws Throwable {
+        final Car car1 = new Car();
+        car1.setName(carName1);
+
+        final Car car2 = new Car();
+        car2.setName(carName2);
+
+        entity = Arrays.asList(car1, car2);
+    }
+
+    @Given("^an entity as a \"(.*?)\" instance$")
+    public void an_entity_as_a_instance(String carName) throws Throwable {
+        final Car car = new Car();
+        car.setName(carName);
+
+        entity = car;
+    }
+
+    @When("^do a POST request to \"(.*?)\" for a Response instance from json$")
     public void do_a_GET_request_to_for_a_Response_instance_from_json(String path) throws Throwable {
         actualResponse = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_JSON)
+                .type(ContentType.APPLICATION_JSON)
                 .path(path)
                 .client()
-                .get();
+                .post(entity);
     }
 
-    @When("^do a GET request to \"(.*?)\" for a list of Car instances from json$")
+    @When("^do a POST request to \"(.*?)\" for a list of Car instances from json$")
     public void do_a_GET_request_to_for_a_list_of_Car_instances_from_json(String path) throws Throwable {
         actualCarList = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_JSON)
+                .type(ContentType.APPLICATION_JSON)
                 .path(path)
                 .client()
-                .get(new TypeReference<List<Car>>() {});
+                .post(entity, new TypeReference<List<Car>>() {});
     }
 
-    @When("^do a GET request to \"(.*?)\" for a Car instance from json$")
+    @When("^do a POST request to \"(.*?)\" for a Car instance from json$")
     public void do_a_GET_request_to_for_a_Car_instance_from_json(String path) throws Throwable {
         actualCar = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_JSON)
+                .type(ContentType.APPLICATION_JSON)
                 .path(path)
                 .client()
-                .get(Car.class);
+                .post(entity, Car.class);
     }
 
-    @When("^do a GET request to \"(.*?)\" for a Response instance from xml$")
+    @When("^do a POST request to \"(.*?)\" for a Response instance from xml$")
     public void do_a_GET_request_to_for_a_Response_instance_from_xml(String path) throws Throwable {
         actualResponse = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_XML)
+                .type(ContentType.APPLICATION_XML)
                 .path(path)
                 .client()
-                .get();
+                .post(entity);
     }
 
-    @When("^do a GET request to \"(.*?)\" for a list of Car instances from xml$")
+    @When("^do a POST request to \"(.*?)\" for a list of Car instances from xml$")
     public void do_a_GET_request_to_for_a_list_of_Car_instances_from_xml(String path) throws Throwable {
         actualCarList = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_XML)
+                .type(ContentType.APPLICATION_XML)
                 .path(path)
                 .client()
-                .get(new TypeReference<List<Car>>() {});
+                .post(entity, new TypeReference<List<Car>>() {});
     }
 
-    @When("^do a GET request to \"(.*?)\" for a Car instance from xml$")
+    @When("^do a POST request to \"(.*?)\" for a Car instance from xml$")
     public void do_a_GET_request_to_for_a_Car_instance_from_xml(String path) throws Throwable {
         actualCar = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_XML)
+                .type(ContentType.APPLICATION_XML)
                 .path(path)
                 .client()
-                .get(Car.class);
+                .post(entity, Car.class);
     }
 
     @Then("^the status code is (\\d+)$")

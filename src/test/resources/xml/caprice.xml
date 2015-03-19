@@ -1,0 +1,24 @@
+<car>
+    <name>Chevrolet Caprice</name>
+    <production>1965-1970</production>
+    <bodies>
+        <body>
+            <style>coupe</style>
+            <doors>2</doors>
+        </body>
+        <body>
+            <style>hardtop</style>
+            <doors>4</doors>
+        </body>
+    </bodies>
+    <engines>
+        <engine>
+            <cid>283</cid>
+            <size>small-block v8</size>
+        </engine>
+        <engine>
+            <cid>427</cid>
+            <size>big-block v8</size>
+        </engine>
+    </engines>
+</car>

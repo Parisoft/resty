@@ -76,7 +76,7 @@ public class EntityReaderImpl implements EntityReader {
 
             return JacksonUtils.read(entityWrapper, someClass, MediaTypeUtils.valueOf(getContentType()));
         } catch (Exception e) {
-            throw new IOException("Cannot read response entity: " + e.getMessage());
+            throw new IOException("Cannot read response entity", e);
         } finally {
             EntityUtils.consume(entity);
         }
@@ -86,7 +86,7 @@ public class EntityReaderImpl implements EntityReader {
         try {
             return JacksonUtils.read(body, someClass, MediaTypeUtils.valueOf(getContentType()));
         } catch (Exception e) {
-            throw new IOException("Cannot read response entity: " + e.getMessage());
+            throw new IOException("Cannot read response entity", e);
         }
     }
 
@@ -107,7 +107,7 @@ public class EntityReaderImpl implements EntityReader {
 
             return JacksonUtils.read(entityWrapper, reference, MediaTypeUtils.valueOf(getContentType()));
         } catch (Exception e) {
-            throw new IOException("Cannot read response entity: " + e.getMessage());
+            throw new IOException("Cannot read response entity", e);
         } finally {
             EntityUtils.consume(entity);
         }
@@ -117,7 +117,7 @@ public class EntityReaderImpl implements EntityReader {
         try {
             return JacksonUtils.read(body, reference, MediaTypeUtils.valueOf(getContentType()));
         } catch (Exception e) {
-            throw new IOException("Cannot read response entity: " + e.getMessage());
+            throw new IOException("Cannot read response entity", e);
         }
     }
 
@@ -168,7 +168,6 @@ public class EntityReaderImpl implements EntityReader {
 
     @Override
     protected void finalize() throws Throwable {
-        System.err.println("fim");
         EntityUtils.consumeQuietly(httpResponse.getEntity());
         super.finalize();
     }

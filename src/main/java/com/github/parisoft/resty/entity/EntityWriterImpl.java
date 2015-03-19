@@ -44,7 +44,7 @@ public class EntityWriterImpl implements EntityWriter {
                 entity = new StringEntity(entityAsString, contentType);
             }
         } catch (Exception e) {
-            throw new IOException("Cannot write request entity: " + e.getMessage());
+            throw new IOException("Cannot write request entity", e);
         }
 
         return entity;

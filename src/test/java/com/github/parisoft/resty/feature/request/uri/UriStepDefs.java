@@ -6,9 +6,13 @@ import static org.junit.Assert.assertEquals;
 import java.net.URI;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
+
 import com.github.parisoft.resty.RESTy;
 import com.github.parisoft.resty.request.Request;
+import com.github.parisoft.resty.transformer.Query;
 
+import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
@@ -30,9 +34,14 @@ public class UriStepDefs {
         }
     }
 
-    @When("^a request is created with \"(.*?)\"$")
-    public void a_request_is_created_with(String uri) throws Throwable {
+    @When("^a request is created with \"(.*?)\" and $")
+    public void a_request_is_created_with_and(String uri) throws Throwable {
         request = RESTy.request(uri);
+    }
+
+    @When("^a request is created with \"(.*?)\" and \"(.*?)\"$")
+    public void a_request_is_created_with_and(String uri, @Transform(Query.class) List<NameValuePair> queries) throws Throwable {
+        request = RESTy.request(uri).query(queries);
     }
 
     @Then("^the URI from HTTP request is \"(.*?)\"$")

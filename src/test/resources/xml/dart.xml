@@ -1,0 +1,24 @@
+<car>
+	<name>Dodge Dart</name>
+	<production>1967-1976</production>
+	<bodies>
+		<body>
+			<style>coupe</style>
+			<doors>2</doors>
+		</body>
+		<body>
+			<style>sedan</style>
+			<doors>4</doors>
+		</body>
+	</bodies>
+	<engines>
+		<engine>
+			<cid>318</cid>
+			<size>small-block v8</size>
+		</engine>
+		<engine>
+			<cid>426</cid>
+			<size>big-block v8</size>
+		</engine>
+	</engines>
+</car>

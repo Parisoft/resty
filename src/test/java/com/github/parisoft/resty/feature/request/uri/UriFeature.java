@@ -6,7 +6,7 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features="classpath:feature/request/uri.feature")
+@CucumberOptions(features="classpath:feature/request/URI.feature")
 public class UriFeature {
 
 }

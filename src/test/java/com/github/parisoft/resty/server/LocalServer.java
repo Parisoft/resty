@@ -1,5 +1,7 @@
 package com.github.parisoft.resty.server;
 
+import java.io.IOException;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -10,8 +12,12 @@ import org.springframework.util.SocketUtils;
 @EnableAutoConfiguration
 public class LocalServer {
 
-    private static int port;
+    private static Integer port;
     private static ConfigurableApplicationContext context;
+
+    public static void main(String[] args) throws IOException {
+        start();
+    }
 
     public static void start() {
         if (isRunning()) {
@@ -25,12 +31,20 @@ public class LocalServer {
         context = SpringApplication.run(LocalServer.class);
     }
 
-    public static int getPort() {
+    public static Integer getPort() {
         return port;
     }
 
     public static ConfigurableApplicationContext getContext() {
         return context;
+    }
+
+    public static String getHost() {
+        if (!isRunning()) {
+            return null;
+        }
+
+        return "http://localhost:" + port;
     }
 
     public static boolean isRunning() {

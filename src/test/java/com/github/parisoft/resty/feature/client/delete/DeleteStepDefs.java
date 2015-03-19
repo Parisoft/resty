@@ -1,4 +1,4 @@
-package com.github.parisoft.resty.feature.client.get;
+package com.github.parisoft.resty.feature.client.delete;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,7 +16,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class GetStepDefs {
+public class DeleteStepDefs {
 
     private Response actualResponse;
     private Car actualCar;
@@ -27,58 +27,58 @@ public class GetStepDefs {
         LocalServer.start();
     }
 
-    @When("^do a GET request to \"(.*?)\" for a Response instance from json$")
+    @When("^do a DELETE request to \"(.*?)\" for a Response instance from json$")
     public void do_a_GET_request_to_for_a_Response_instance_from_json(String path) throws Throwable {
         actualResponse = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_JSON)
                 .path(path)
                 .client()
-                .get();
+                .delete();
     }
 
-    @When("^do a GET request to \"(.*?)\" for a list of Car instances from json$")
+    @When("^do a DELETE request to \"(.*?)\" for a list of Car instances from json$")
     public void do_a_GET_request_to_for_a_list_of_Car_instances_from_json(String path) throws Throwable {
         actualCarList = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_JSON)
                 .path(path)
                 .client()
-                .get(new TypeReference<List<Car>>() {});
+                .delete(new TypeReference<List<Car>>() {});
     }
 
-    @When("^do a GET request to \"(.*?)\" for a Car instance from json$")
+    @When("^do a DELETE request to \"(.*?)\" for a Car instance from json$")
     public void do_a_GET_request_to_for_a_Car_instance_from_json(String path) throws Throwable {
         actualCar = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_JSON)
                 .path(path)
                 .client()
-                .get(Car.class);
+                .delete(Car.class);
     }
 
-    @When("^do a GET request to \"(.*?)\" for a Response instance from xml$")
+    @When("^do a DELETE request to \"(.*?)\" for a Response instance from xml$")
     public void do_a_GET_request_to_for_a_Response_instance_from_xml(String path) throws Throwable {
         actualResponse = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_XML)
                 .path(path)
                 .client()
-                .get();
+                .delete();
     }
 
-    @When("^do a GET request to \"(.*?)\" for a list of Car instances from xml$")
+    @When("^do a DELETE request to \"(.*?)\" for a list of Car instances from xml$")
     public void do_a_GET_request_to_for_a_list_of_Car_instances_from_xml(String path) throws Throwable {
         actualCarList = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_XML)
                 .path(path)
                 .client()
-                .get(new TypeReference<List<Car>>() {});
+                .delete(new TypeReference<List<Car>>() {});
     }
 
-    @When("^do a GET request to \"(.*?)\" for a Car instance from xml$")
+    @When("^do a DELETE request to \"(.*?)\" for a Car instance from xml$")
     public void do_a_GET_request_to_for_a_Car_instance_from_xml(String path) throws Throwable {
         actualCar = RESTy.request(LocalServer.getHost())
                 .accept(ContentType.APPLICATION_XML)
                 .path(path)
                 .client()
-                .get(Car.class);
+                .delete(Car.class);
     }
 
     @Then("^the status code is (\\d+)$")
