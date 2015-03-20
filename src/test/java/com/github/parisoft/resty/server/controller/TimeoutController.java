@@ -16,7 +16,7 @@ public class TimeoutController {
 
     @RequestMapping(method=HEAD, value="/sleep/{time}")
     public ResponseEntity<Void> sleep(@PathVariable("time") Long time) throws InterruptedException {
-        System.out.println(requestCounter.incrementAndGet());
+        requestCounter.incrementAndGet();
         Thread.sleep(time);
         return ResponseEntity.noContent().build();
     }
