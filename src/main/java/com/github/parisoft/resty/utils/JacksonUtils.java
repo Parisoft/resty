@@ -8,12 +8,12 @@ import org.apache.http.HttpEntity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.jaxrs.base.ProviderBase;
-import com.github.parisoft.resty.RESTy;
+import com.github.parisoft.resty.processor.DataProcessors;
 
 public class JacksonUtils {
 
     public static <T> T read(HttpEntity entity, Class<T> someClass, MediaType contentType) throws IOException {
-        for (ProviderBase<?, ?, ?, ?> provider : RESTy.getDataProcessors().values()) {
+        for (ProviderBase<?, ?, ?, ?> provider : DataProcessors.getInstance().values()) {
             if (provider.isReadable(someClass, null, null, contentType)) {
                 return provider
                         .locateMapper(someClass, contentType)
@@ -25,7 +25,7 @@ public class JacksonUtils {
     }
 
     public static <T> T read(HttpEntity entity, TypeReference<T> reference, MediaType contentType) throws IOException {
-        for (ProviderBase<?, ?, ?, ?> provider : RESTy.getDataProcessors().values()) {
+        for (ProviderBase<?, ?, ?, ?> provider : DataProcessors.getInstance().values()) {
             if (provider.isReadable(reference.getClass(), reference.getType(), null, contentType)) {
                 return provider
                         .locateMapper(reference.getClass(), contentType)
@@ -37,7 +37,7 @@ public class JacksonUtils {
     }
 
     public static <T> T read(String content, Class<T> someClass, MediaType contentType) throws IOException {
-        for (ProviderBase<?, ?, ?, ?> provider : RESTy.getDataProcessors().values()) {
+        for (ProviderBase<?, ?, ?, ?> provider : DataProcessors.getInstance().values()) {
             if (provider.isReadable(someClass, null, null, contentType)) {
                 return provider
                         .locateMapper(someClass, contentType)
@@ -49,7 +49,7 @@ public class JacksonUtils {
     }
 
     public static <T> T read(String content, TypeReference<T> reference, MediaType contentType) throws IOException {
-        for (ProviderBase<?, ?, ?, ?> provider : RESTy.getDataProcessors().values()) {
+        for (ProviderBase<?, ?, ?, ?> provider : DataProcessors.getInstance().values()) {
             if (provider.isReadable(reference.getClass(), reference.getType(), null, contentType)) {
                 return provider
                         .locateMapper(reference.getClass(), contentType)
@@ -62,7 +62,7 @@ public class JacksonUtils {
 
 
     public static String write(Object object, MediaType contentType) throws IOException {
-        for (ProviderBase<?, ?, ?, ?> provider : RESTy.getDataProcessors().values()) {
+        for (ProviderBase<?, ?, ?, ?> provider : DataProcessors.getInstance().values()) {
             if (provider.isWriteable(object.getClass(), null, null, contentType)) {
                 return provider
                         .locateMapper(object.getClass(), contentType)

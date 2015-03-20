@@ -29,7 +29,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.parisoft.resty.request.HttpRequest;
 import com.github.parisoft.resty.request.Request;
 import com.github.parisoft.resty.request.RequestMethod;
-import com.github.parisoft.resty.request.RequestRetryHandler;
+import com.github.parisoft.resty.request.retry.RequestRetryHandler;
 import com.github.parisoft.resty.request.ssl.BypassTrustStrategy;
 import com.github.parisoft.resty.response.Response;
 import com.github.parisoft.resty.response.ResponseFactory;

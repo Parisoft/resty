@@ -1,9 +1,7 @@
-package com.github.parisoft.resty.request;
+package com.github.parisoft.resty.request.retry;
 
 import java.io.IOException;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.SSLHandshakeException;
 
@@ -14,14 +12,6 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpCoreContext;
 
 public class RequestRetryHandler implements HttpRequestRetryHandler {
-
-    public static final List<String> IDEMPOTENT_METHODS = new ArrayList<>();
-    static {
-        IDEMPOTENT_METHODS.add("GET");
-        IDEMPOTENT_METHODS.add("HEAD");
-        IDEMPOTENT_METHODS.add("TRACE");
-        IDEMPOTENT_METHODS.add("OPTIONS");
-    }
 
     private final int maxRetries;
 
@@ -72,6 +62,6 @@ public class RequestRetryHandler implements HttpRequestRetryHandler {
 
     private boolean isRequestIdempotent(HttpContext context) {
         final HttpUriRequest request = (HttpUriRequest) context.getAttribute(HttpCoreContext.HTTP_REQUEST);
-        return IDEMPOTENT_METHODS.contains(request.getMethod());
+        return IdempotentRequestMethods.getInstance().contains(request.getMethod());
     }
 }
