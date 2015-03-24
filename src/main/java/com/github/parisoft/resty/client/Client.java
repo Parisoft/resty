@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2013-2014 Parisoft Team
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package com.github.parisoft.resty.client;
 
 import static com.github.parisoft.resty.request.RequestMethod.DELETE;
@@ -29,11 +44,19 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.parisoft.resty.request.HttpRequest;
 import com.github.parisoft.resty.request.Request;
 import com.github.parisoft.resty.request.RequestMethod;
+import com.github.parisoft.resty.request.retry.IdempotentRequestMethods;
 import com.github.parisoft.resty.request.retry.RequestRetryHandler;
 import com.github.parisoft.resty.request.ssl.BypassTrustStrategy;
 import com.github.parisoft.resty.response.Response;
 import com.github.parisoft.resty.response.ResponseFactory;
 
+/**
+ * Class that contains methods to execute a {@link Request}.<br>
+ * Also, contains shortcuts to configure a request execution timeout, retries and SSL verification.
+ *
+ * @author Andre Paris
+ *
+ */
 public class Client {
 
     private final Request request;
@@ -41,67 +64,192 @@ public class Client {
     private int retries = 0;
     private boolean bypassSSL = true;
 
+    /**
+     * Creates an instance of a Client to execute a given {@link Request}.<br>
+     * <br>
+     *<i>Note:</i> this is equivalent to {@link Request#client()}
+     *
+     * @param request The request to be executed by this client
+     * @throws IllegalArgumentException If the request is <code>null</code>
+     */
     public Client(Request request) {
+        if (request == null) {
+            throw new IllegalArgumentException("Cannot create client: request cannot be null");
+        }
+
         this.request = request;
     }
 
+    /**
+     * Sets the number of attempts that a failed request execution must be retried.<br>
+     * <br>
+     * Default is 0 (no retries)
+     *
+     * @param retries The number of requests retries
+     * @see RequestRetryHandler
+     * @see IdempotentRequestMethods
+     */
     public Client retries(int retries) {
         this.retries = retries;
 
         return this;
     }
 
+    /**
+     * Sets the request execution timeout.<br>
+     * Under the hood this is done with these {@link HttpClient} configurations:
+     * <ul>
+     * <li>{@link SocketConfig#getSoTimeout()}</li>
+     * <li>{@link RequestConfig#getConnectionRequestTimeout()}</li>
+     * <li>{@link RequestConfig#getConnectTimeout()}</li>
+     * <li>{@link RequestConfig#getSocketTimeout()}</li>
+     * </ul>
+     * Default is 0 (no timeout)
+     *
+     * @param value The timeout value
+     * @param unit The timeout unit
+     * @return this client
+     */
     public Client timeout(int value, TimeUnit unit) {
         timeout = (int) unit.toMillis(value);
 
         return this;
     }
 
+    /**
+     * Sets the bypass of certificate verification process on SSL contexts.<br>
+     * <br>
+     * Default is true (bypass the verification)
+     *
+     * @param bypassSSL True to bypass the verification, false otherwise
+     * @return this client
+     * @see BypassTrustStrategy
+     * @see NoopHostnameVerifier
+     */
     public Client bypassSSL(boolean bypassSSL) {
         this.bypassSSL = bypassSSL;
 
         return this;
     }
 
-
+    /**
+     * Executes the request associated with this client as a GET.
+     *
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     */
     public Response get() throws IOException {
         return execute(GET);
     }
 
+    /**
+     * Executes the request associated with this client as a GET.<br>
+     * The entity of the response is processed and converted into a given type.
+     *
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     */
     public <T> T get(Class<T> responseClass) throws IOException {
         return get()
                 .getEntityAs(responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a GET.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * get( new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     */
     public <T> T get(TypeReference<T> responseReference) throws IOException {
         return get()
                 .getEntityAs(responseReference);
     }
 
+    /**
+     * Executes the request associated with this client as a HEAD.
+     *
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     */
     public Response head() throws IOException {
         return execute(HEAD);
     }
 
+    /**
+     * Executes the request associated with this client as a HEAD.<br>
+     * The entity of the response is processed and converted into a given type.
+     *
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     */
     public <T> T head(Class<T> responseClass) throws IOException {
         return head()
                 .getEntityAs(responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a HEAD.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * head( new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     */
     public <T> T head(TypeReference<T> responseReference) throws IOException {
         return head()
                 .getEntityAs(responseReference);
     }
 
-
+    /**
+     * Executes the request associated with this client as a DELETE.
+     *
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     */
     public Response delete() throws IOException {
         return execute(DELETE);
     }
 
+    /**
+     * Executes the request associated with this client as a DELETE.<br>
+     * The entity of the response is processed and converted into a given type.
+     *
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     */
     public <T> T delete(Class<T> responseClass) throws IOException {
         return delete()
                 .getEntityAs(responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a DELETE.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * delete( new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     */
     public <T> T delete(TypeReference<T> responseReference) throws IOException {
         return delete()
                 .getEntityAs(responseReference);

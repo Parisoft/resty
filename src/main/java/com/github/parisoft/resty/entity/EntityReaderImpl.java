@@ -57,10 +57,6 @@ public class EntityReaderImpl implements EntityReader {
 
     @Override
     public <T> T getEntityAs(Class<T> someClass) throws IOException {
-        if (isInstanciableFromString(someClass)) {
-            return newInstanceFromString(someClass, getEntityAsString());
-        }
-
         if (body != null) {
             return getEntityFromBodyAs(someClass);
         }
@@ -76,6 +72,10 @@ public class EntityReaderImpl implements EntityReader {
 
             return JacksonUtils.read(entityWrapper, someClass, MediaTypeUtils.valueOf(getContentType()));
         } catch (Exception e) {
+            if (isInstanciableFromString(someClass)) {
+                return newInstanceFromString(someClass, getEntityAsString());
+            }
+
             throw new IOException("Cannot read response entity", e);
         } finally {
             EntityUtils.consume(entity);

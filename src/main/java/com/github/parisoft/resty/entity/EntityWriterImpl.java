@@ -26,7 +26,7 @@ public class EntityWriterImpl implements EntityWriter {
     @Override
     public HttpEntity getEntity() throws IOException {
         final Object rawEntity = request.entity();
-        final String rawType = request.headers().containsKey(CONTENT_TYPE) ? request.headers().get(CONTENT_TYPE).get(0) : null;
+        final String rawType = request.headers().containsKey(CONTENT_TYPE) ? request.headers().getFirst(CONTENT_TYPE) : null;
         final HttpEntity entity;
 
         try {

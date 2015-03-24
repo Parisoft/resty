@@ -30,7 +30,7 @@ public interface EntityReader {
 
     /**
      * @param entity The HTTP entity to get the encoding
-     * @return the encoding of a given HTTP entity or a empty String if unknow
+     * @return the encoding of a given HTTP entity or a empty String if unknown
      */
     public Header getContentEncoding();
 }
