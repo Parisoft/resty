@@ -1,6 +1,7 @@
 package com.github.parisoft.resty.server.controller;
 
 import static org.springframework.web.bind.annotation.RequestMethod.HEAD;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,7 +15,7 @@ public class TimeoutController {
 
     public static AtomicInteger requestCounter = new AtomicInteger(0);
 
-    @RequestMapping(method=HEAD, value="/sleep/{time}")
+    @RequestMapping(method={HEAD, POST}, value="/sleep/{time}")
     public ResponseEntity<Void> sleep(@PathVariable("time") Long time) throws InterruptedException {
         requestCounter.incrementAndGet();
         Thread.sleep(time);

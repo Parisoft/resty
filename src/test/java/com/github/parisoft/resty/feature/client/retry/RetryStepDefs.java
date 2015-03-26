@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.parisoft.resty.RESTy;
+import com.github.parisoft.resty.request.retry.IdempotentRequestMethods;
 import com.github.parisoft.resty.server.LocalServer;
 import com.github.parisoft.resty.server.controller.TimeoutController;
 
@@ -28,6 +29,7 @@ public class RetryStepDefs {
     @Before
     public void before() {
         LocalServer.start();
+        IdempotentRequestMethods.getInstance().reset();
     }
 
     @Given("^a timeout of (\\d+) millis$")
@@ -43,6 +45,30 @@ public class RetryStepDefs {
     @Given("^a request counter on (\\d+)$")
     public void a_request_counter_on(int counterValue) throws Throwable {
         requestCounter.set(counterValue);
+    }
+
+    @Given("^the \"(.*?)\" method as idempotent$")
+    public void the_method_as_idempotent(String method) throws Throwable {
+        IdempotentRequestMethods.getInstance().add(method);
+    }
+
+    @Given("^the \"(.*?)\" method as no idempotent$")
+    public void the_method_as_no_idempotent(String method) throws Throwable {
+        IdempotentRequestMethods.getInstance().remove(method);
+    }
+
+    @When("^do a POST request to \"(.*?)\" with the given timeout and retry$")
+    public void do_a_POST_request_to_with_the_given_timeout_and_retry(String path) throws Throwable {
+        try {
+            RESTy.request(LocalServer.getHost())
+            .path(path)
+            .client()
+            .timeout(timeout, TimeUnit.MILLISECONDS)
+            .retries(attempts)
+            .post();
+        } catch (Exception e) {
+            actualException = e;
+        }
     }
 
     @When("^do a HEAD request to \"(.*?)\" with the given timeout and retry$")

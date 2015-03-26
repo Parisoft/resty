@@ -1,6 +1,6 @@
 package com.github.parisoft.resty.request.retry;
 
-import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import com.github.parisoft.resty.client.Client;
 
@@ -18,7 +18,7 @@ import com.github.parisoft.resty.client.Client;
  * @see RequestRetryHandler
  * @see Client#retries(int)
  */
-public class IdempotentRequestMethods extends TreeSet<String> {
+public class IdempotentRequestMethods extends ConcurrentSkipListSet<String> {
 
     private static final long serialVersionUID = -5207417261749846206L;
     private static final IdempotentRequestMethods instance = new IdempotentRequestMethods();

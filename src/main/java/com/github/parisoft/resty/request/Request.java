@@ -150,7 +150,7 @@ public class Request {
 
             for (int i = 0; i < this.paths.size() - 1; i++) {
                 if (!this.paths.get(i).isEmpty()) {
-                    normalized.add(this.paths().get(i));
+                    normalized.add(this.paths.get(i));
                 }
             }
 
