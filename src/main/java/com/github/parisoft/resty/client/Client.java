@@ -255,31 +255,94 @@ public class Client {
                 .getEntityAs(responseReference);
     }
 
+    /**
+     * Executes the request associated with this client as a POST.
+     *
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     */
     public Response post() throws IOException {
         return execute(POST);
     }
 
+    /**
+     * Executes the request associated with this client as a POST.<br>
+     * The entity of the response is processed and converted into a given type.
+     *
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     */
     public <T> T post(Class<T> responseClass) throws IOException {
         return post()
                 .getEntityAs(responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a POST.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * post( new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     */
     public <T> T post(TypeReference<T> responseReference) throws IOException {
         return post()
                 .getEntityAs(responseReference);
     }
 
+    /**
+     * Executes the request associated with this client as a POST.<br>
+     * <br>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #post()}.
+     *
+     * @param entity The entity body to send over request
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     */
     public Response post(Object entity) throws IOException {
         request.entity(entity);
 
         return post();
     }
 
+    /**
+     * Executes the request associated with this client as a POST.<br>
+     * The entity of the response is processed and converted into a given type.<br>
+     * <br>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #post(Class)}.
+     *
+     * @param entity The entity body to send over request
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     */
     public <T> T post(Object entity, Class<T> responseClass) throws IOException {
         return post(entity)
                 .getEntityAs(responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a POST.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * post( entity, new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #post(TypeReference)}.
+     *
+     * @param entity The entity body to send over request
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     */
     public <T> T post(Object entity, TypeReference<T> responseReference) throws IOException {
         return post(entity)
                 .getEntityAs(responseReference);
