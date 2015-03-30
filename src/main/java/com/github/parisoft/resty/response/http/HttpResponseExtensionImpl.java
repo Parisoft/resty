@@ -1,3 +1,18 @@
+/*
+ *    Copyright 2013-2014 Parisoft Team
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package com.github.parisoft.resty.response.http;
 
 import java.io.IOException;
@@ -10,6 +25,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 
+import com.github.parisoft.resty.exception.IllegalHttpStatusCode;
 import com.github.parisoft.resty.response.Response;
 
 public class HttpResponseExtensionImpl implements HttpResponseExtension {
@@ -34,16 +50,16 @@ public class HttpResponseExtensionImpl implements HttpResponseExtension {
     }
 
     @Override
-    public Response assertOk() {
+    public Response assertOk() throws IllegalHttpStatusCode {
         return assertStatus(HttpStatus.SC_OK);
     }
 
     @Override
-    public Response assertStatus(int expectedStatus) {
+    public Response assertStatus(int expectedStatus) throws IllegalHttpStatusCode {
         final int actualStatus = getStatusCode();
 
         if (expectedStatus != actualStatus) {
-            throw new IllegalStateException(String.format("Cannot assert response status code: expected %s, got %s", expectedStatus, actualStatus));
+            throw new IllegalHttpStatusCode(expectedStatus, actualStatus);
         }
 
         return responseProxy;
