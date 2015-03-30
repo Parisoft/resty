@@ -28,7 +28,7 @@ Add the follow dependency to your `pom.xml`:
  <dependency>
      <groupId>com.github.parisoft</groupId>
      <artifactId>resty</artifactId>
-     <version>0.9.0</version>
+     <version>1.0.0</version>
  </dependency>
 ```
 
