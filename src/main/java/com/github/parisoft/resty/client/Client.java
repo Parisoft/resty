@@ -348,64 +348,189 @@ public class Client {
                 .getEntityAs(responseReference);
     }
 
+    /**
+     * Executes the request associated with this client as a PUT.
+     *
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     */
     public Response put() throws IOException {
         return execute(PUT);
     }
 
+    /**
+     * Executes the request associated with this client as a PUT.<br>
+     * The entity of the response is processed and converted into a given type.
+     *
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     */
     public <T> T put(Class<T> responseClass) throws IOException {
         return put()
                 .getEntityAs(responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a PUT.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * put( new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     */
     public <T> T put(TypeReference<T> responseReference) throws IOException {
         return put()
                 .getEntityAs(responseReference);
     }
 
+    /**
+     * Executes the request associated with this client as a PUT.<br>
+     * <br>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #put()}.
+     *
+     * @param entity The entity body to send over request
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     */
     public Response put(Object entity) throws IOException {
         request.entity(entity);
 
         return put();
     }
 
+    /**
+     * Executes the request associated with this client as a PUT.<br>
+     * The entity of the response is processed and converted into a given type.<br>
+     * <br>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #put(Class)}.
+     *
+     * @param entity The entity body to send over request
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     */
     public <T> T put(Object entity, Class<T> responseClass) throws IOException {
         return put(entity)
                 .getEntityAs(responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a PUT.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * put( entity, new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #put(TypeReference)}.
+     *
+     * @param entity The entity body to send over request
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     */
     public <T> T put(Object entity, TypeReference<T> responseReference) throws IOException {
         return put(entity)
                 .getEntityAs(responseReference);
     }
 
+    /**
+     * Executes the request associated with this client as a OPTIONS.
+     *
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     */
     public Response options() throws IOException {
         return execute(OPTIONS);
     }
 
+    /**
+     * Executes the request associated with this client as a OPTIONS.<br>
+     * The entity of the response is processed and converted into a given type.
+     *
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     */
     public <T> T options(Class<T> responseClass) throws IOException {
         return options()
                 .getEntityAs(responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a OPTIONS.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * options( new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     */
     public <T> T options(TypeReference<T> responseReference) throws IOException {
         return options()
                 .getEntityAs(responseReference);
     }
 
+    /**
+     * Executes the request associated with this client as a TRACE.
+     *
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     */
     public Response trace() throws IOException {
         return execute(TRACE);
     }
 
+    /**
+     * Executes the request associated with this client as a TRACE.<br>
+     * The entity of the response is processed and converted into a given type.
+     *
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     */
     public <T> T trace(Class<T> responseClass) throws IOException {
         return trace()
                 .getEntityAs(responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a TRACE.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * trace( new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     */
     public <T> T trace(TypeReference<T> responseReference) throws IOException {
         return trace()
                 .getEntityAs(responseReference);
     }
 
+    /**
+     * Executes the request associated with this client as a given method.
+     *
+     * @param requestMethod The method in which the request is executed
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     * @see RequestMethod
+     */
     public Response execute(RequestMethod requestMethod) throws IOException {
         final HttpClient httpClient = toHttpClient();
         final HttpRequest httpRequest = request.toHttpRequest(requestMethod);
@@ -414,35 +539,108 @@ public class Client {
         return ResponseFactory.newResponse(httpResponse);
     }
 
+    /**
+     * Executes the request associated with this client as a given method.<br>
+     * The entity of the response is processed and converted into a given type.
+     *
+     * @param requestMethod The method in which the request is executed
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see RequestMethod
+     */
     public <T> T execute(RequestMethod requestMethod, Class<T> responseClass) throws IOException {
         return execute(requestMethod)
                 .getEntityAs(responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a given method.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * execute( anyMethod, new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * @param requestMethod The method in which the request is executed
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     * @see RequestMethod
+     */
     public <T> T execute(RequestMethod requestMethod, TypeReference<T> responseReference) throws IOException {
         return execute(requestMethod)
                 .getEntityAs(responseReference);
     }
 
+    /**
+     * Executes the request associated with this client as a given method.<br>
+     * <br>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #execute(RequestMethod)}.
+     *
+     * @param requestMethod The method in which the request is executed
+     * @param entity The entity body to send over request
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     * @see RequestMethod
+     */
     public Response execute(RequestMethod requestMethod, Object entity) throws IOException {
         request.entity(entity);
 
         return execute(requestMethod);
     }
 
+    /**
+     * Executes the request associated with this client as a given method.<br>
+     * The entity of the response is processed and converted into a given type.<br>
+     * <br>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #execute(RequestMethod, Class)}.
+     *
+     * @param requestMethod The method in which the request is executed
+     * @param entity The entity body to send over request
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see RequestMethod
+     */
     public <T> T execute(RequestMethod requestMethod, Object entity, Class<T> responseClass) throws IOException {
         request.entity(entity);
 
         return execute(requestMethod, responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a given method.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * execute( anyMethod, entity, new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #execute(RequestMethod, TypeReference)}.
+     *
+     * @param requestMethod The method in which the request is executed
+     * @param entity The entity body to send over request
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     * @see RequestMethod
+     */
     public <T> T execute(RequestMethod requestMethod, Object entity, TypeReference<T> responseReference) throws IOException {
         request.entity(entity);
 
         return execute(requestMethod, responseReference);
     }
 
-
+    /**
+     * Executes the request associated with this client as a given method.
+     *
+     * @param requestMethod The method in which the request is executed
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     */
     public Response execute(String requestMethod) throws IOException {
         final HttpClient httpClient = toHttpClient();
         final HttpRequest httpRequest = request.toHttpRequest(requestMethod);
@@ -451,34 +649,105 @@ public class Client {
         return ResponseFactory.newResponse(httpResponse);
     }
 
+    /**
+     * Executes the request associated with this client as a given method.<br>
+     * The entity of the response is processed and converted into a given type.
+     *
+     * @param requestMethod The method in which the request is executed
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     */
     public <T> T execute(String requestMethod, Class<T> responseClass) throws IOException {
         return execute(requestMethod)
                 .getEntityAs(responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a given method.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * execute( anyMethod, new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * @param requestMethod The method in which the request is executed
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     */
     public <T> T execute(String requestMethod, TypeReference<T> responseReference) throws IOException {
         return execute(requestMethod)
                 .getEntityAs(responseReference);
     }
 
+    /**
+     * Executes the request associated with this client as a given method.<br>
+     * <br>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #execute(String)}.
+     *
+     * @param requestMethod The method in which the request is executed
+     * @param entity The entity body to send over request
+     * @return The result of the execution as a {@link Response} instance
+     * @throws IOException If any problem occurs during the request
+     */
     public Response execute(String requestMethod, Object entity) throws IOException {
         request.entity(entity);
 
         return execute(requestMethod);
     }
 
+    /**
+     * Executes the request associated with this client as a given method.<br>
+     * The entity of the response is processed and converted into a given type.<br>
+     * <br>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #execute(String, Class)}.
+     *
+     * @param requestMethod The method in which the request is executed
+     * @param entity The entity body to send over request
+     * @param responseClass The type to convert the response entity
+     * @return The response entity converted into a given type
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     */
     public <T> T execute(String requestMethod, Object entity, Class<T> responseClass) throws IOException {
         request.entity(entity);
 
         return execute(requestMethod, responseClass);
     }
 
+    /**
+     * Executes the request associated with this client as a given method.<br>
+     * The entity of the response is processed and converted into a given type reference.<br>
+     * <br>
+     * As example, to convert the response entity into a <code>List{@literal <String>}</code> do
+     * <pre>
+     * execute( anyMethod, entity, new TypeReference{@literal <List<String>>}(){} )
+     * </pre>
+     * <i>Note:</i> this is equivalent to invoke {@link Request#entity(Object)} and then {@link #execute(String, TypeReference)}.
+     *
+     * @param requestMethod The method in which the request is executed
+     * @param entity The entity body to send over request
+     * @param responseReference The type reference to convert the response entity
+     * @return The response entity converted into a given type reference
+     * @throws IOException If any problem occurs during the request or during the entity processing
+     * @see TypeReference
+     */
     public <T> T execute(String requestMethod, Object entity, TypeReference<T> responseReference) throws IOException {
         request.entity(entity);
 
         return execute(requestMethod, responseReference);
     }
 
+    /**
+     * Returns an {@link HttpClient} instance configured according to this client.<br>
+     * <br>
+     * This method is not intend to be invoked outside the RESTy library.<br>
+     * For your convenience, to execute a request associated with this client, choose the proper method like {@link #get()}, {@link #post()}, or other.
+     *
+     * @return A configured instance of {@link HttpClient}
+     * @throws IOException If some problem occurs during the HttpClient configuration
+     */
     public HttpClient toHttpClient() throws IOException {
         final SocketConfig socketConfig = SocketConfig
                 .custom()

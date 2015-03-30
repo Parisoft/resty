@@ -408,8 +408,9 @@ public class Request {
      * Returns an {@link HttpRequest} instance configured according to this request.<br>
      * The instance is ready to be executed via an {@link HttpClient}.<br>
      * <br>
+     * This method is not intend to be invoked outside the RESTy library.<br>
      * For your convenience just call {@link #client()} and choose the proper method
-     * to execute this request in place of calling a HttpClient with this method result.<br>
+     * to execute this request in place of calling a {@link HttpClient#execute(HttpUriRequest)} with this method result.<br>
      * <br>
      * <i>Note:</i> this is equivalent to {@link #toHttpRequest(String)}
      *
@@ -426,8 +427,9 @@ public class Request {
      * Returns an {@link HttpRequest} instance configured according to this request.<br>
      * The instance is ready to be executed via an {@link HttpClient}.<br>
      * <br>
+     * This method is not intend to be invoked outside the RESTy library.<br>
      * For your convenience just call {@link #client()} and choose the proper method
-     * to execute this request in place of calling a HttpClient with this method result.<br>
+     * to execute this request in place of calling a {@link HttpClient#execute(HttpUriRequest)} with this method result.<br>
      *
      * @param method The request method of the request like GET, POST, PUT, DELETE or other.
      * @return An {@link HttpRequest} instance from this request
