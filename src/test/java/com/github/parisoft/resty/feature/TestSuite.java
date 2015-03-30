@@ -13,11 +13,12 @@ import com.github.parisoft.resty.feature.client.retry.RetryFeature;
 import com.github.parisoft.resty.feature.client.timeout.TimeoutFeature;
 import com.github.parisoft.resty.feature.request.path.PathFeature;
 import com.github.parisoft.resty.feature.request.uri.UriFeature;
+import com.github.parisoft.resty.feature.response.primitive.PrimitiveFeature;
 
 @RunWith(Suite.class)
 @SuiteClasses({
     GetFeature.class, DeleteFeature.class, PostFeature.class, PutFeature.class, ExecutePatchFeature.class,
-    PathFeature.class, UriFeature.class,
+    PathFeature.class, UriFeature.class, PrimitiveFeature.class,
     TimeoutFeature.class, RetryFeature.class })
 public class TestSuite {
 
