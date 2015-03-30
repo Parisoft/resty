@@ -44,18 +44,18 @@
 <p>Given the <a href="https://developer.github.com/v3/meta/">/meta</a> github service wich a request to <a href="https://api.github.com/meta">https://api.github.com/meta</a> brings a JSON like this:</p>
 
 <div class="highlight highlight-json"><pre>{
-  <span class="pl-s1"><span class="pl-pds">"</span>verifiable_password_authentication<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>,
-  <span class="pl-s1"><span class="pl-pds">"</span>github_services_sha<span class="pl-pds">"</span></span>: <span class="pl-s1"><span class="pl-pds">"</span>f39e3c6fa71f1c5c0e8497c28a5e7e1a4501035f<span class="pl-pds">"</span></span>,
-  <span class="pl-s1"><span class="pl-pds">"</span>hooks<span class="pl-pds">"</span></span>: [
-    <span class="pl-s1"><span class="pl-pds">"</span>192.30.252.0/22<span class="pl-pds">"</span></span>
+  <span class="pl-s"><span class="pl-pds">"</span>verifiable_password_authentication<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>,
+  <span class="pl-s"><span class="pl-pds">"</span>github_services_sha<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>f39e3c6fa71f1c5c0e8497c28a5e7e1a4501035f<span class="pl-pds">"</span></span>,
+  <span class="pl-s"><span class="pl-pds">"</span>hooks<span class="pl-pds">"</span></span>: [
+    <span class="pl-s"><span class="pl-pds">"</span>192.30.252.0/22<span class="pl-pds">"</span></span>
   ],
-  <span class="pl-s1"><span class="pl-pds">"</span>git<span class="pl-pds">"</span></span>: [
-    <span class="pl-s1"><span class="pl-pds">"</span>192.30.252.0/22<span class="pl-pds">"</span></span>
+  <span class="pl-s"><span class="pl-pds">"</span>git<span class="pl-pds">"</span></span>: [
+    <span class="pl-s"><span class="pl-pds">"</span>192.30.252.0/22<span class="pl-pds">"</span></span>
   ],
-  <span class="pl-s1"><span class="pl-pds">"</span>importer<span class="pl-pds">"</span></span>: [
-    <span class="pl-s1"><span class="pl-pds">"</span>54.221.4.64<span class="pl-pds">"</span></span>,
-    <span class="pl-s1"><span class="pl-pds">"</span>54.205.129.240<span class="pl-pds">"</span></span>,
-    <span class="pl-s1"><span class="pl-pds">"</span>54.227.175.200<span class="pl-pds">"</span></span>
+  <span class="pl-s"><span class="pl-pds">"</span>importer<span class="pl-pds">"</span></span>: [
+    <span class="pl-s"><span class="pl-pds">"</span>54.221.4.64<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>54.205.129.240<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>54.227.175.200<span class="pl-pds">"</span></span>
   ]
 }</pre></div>
 
@@ -69,7 +69,7 @@
 
 <p>Create a <code>Meta</code> class to represent the JSON:</p>
 
-<div class="highlight highlight-java"><pre><span class="pl-k">package</span> <span class="pl-smp">get.started</span>;
+<div class="highlight highlight-java"><pre><span class="pl-k">package</span> <span class="pl-smi">get.started</span>;
 
 <span class="pl-k">import</span> <span class="pl-smi">java.util.List</span>;
 
@@ -77,49 +77,49 @@
 <span class="pl-k">import</span> <span class="pl-smi">com.fasterxml.jackson.annotation.JsonProperty</span>;
 
 @JsonIgnoreProperties(ignoreUnknown<span class="pl-k">=</span><span class="pl-c1">true</span>)
-<span class="pl-s">public</span> <span class="pl-s">class</span> <span class="pl-en">Meta</span> {
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">Meta</span> {
 
-    <span class="pl-st">@JsonProperty</span>(<span class="pl-s1"><span class="pl-pds">"</span>verifiable_password_authentication<span class="pl-pds">"</span></span>)
-    <span class="pl-s">private</span> <span class="pl-st">boolean</span> verifiable;
+    <span class="pl-k">@JsonProperty</span>(<span class="pl-s"><span class="pl-pds">"</span>verifiable_password_authentication<span class="pl-pds">"</span></span>)
+    <span class="pl-k">private</span> <span class="pl-k">boolean</span> verifiable;
 
-    <span class="pl-s">private</span> <span class="pl-st">List&lt;<span class="pl-stj">String</span>&gt;</span> hooks;
+    <span class="pl-k">private</span> <span class="pl-k">List&lt;<span class="pl-smi">String</span>&gt;</span> hooks;
 
-    <span class="pl-s">public</span> <span class="pl-st">boolean</span> <span class="pl-en">isVerifiable</span>() {
+    <span class="pl-k">public</span> <span class="pl-k">boolean</span> <span class="pl-en">isVerifiable</span>() {
         <span class="pl-k">return</span> verifiable;
     }
 
-    <span class="pl-s">public</span> <span class="pl-st">void</span> <span class="pl-en">setVerifiable</span>(<span class="pl-st">boolean</span> <span class="pl-v">verifiable</span>) {
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">setVerifiable</span>(<span class="pl-k">boolean</span> <span class="pl-v">verifiable</span>) {
         <span class="pl-v">this</span><span class="pl-k">.</span>verifiable <span class="pl-k">=</span> verifiable;
     }
 
-    <span class="pl-s">public</span> <span class="pl-st">List&lt;<span class="pl-stj">String</span>&gt;</span> <span class="pl-en">getHooks</span>() {
+    <span class="pl-k">public</span> <span class="pl-k">List&lt;<span class="pl-smi">String</span>&gt;</span> <span class="pl-en">getHooks</span>() {
         <span class="pl-k">return</span> hooks;
     }
 
-    <span class="pl-s">public</span> <span class="pl-st">void</span> <span class="pl-en">setHooks</span>(<span class="pl-st">List&lt;<span class="pl-stj">String</span>&gt;</span> <span class="pl-v">hooks</span>) {
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">setHooks</span>(<span class="pl-k">List&lt;<span class="pl-smi">String</span>&gt;</span> <span class="pl-v">hooks</span>) {
         <span class="pl-v">this</span><span class="pl-k">.</span>hooks <span class="pl-k">=</span> hooks;
     }
 }</pre></div>
 
 <p>This code consumes the <a href="https://developer.github.com/v3/meta/">/meta</a> service and writes the result into a <code>Meta</code> object:</p>
 
-<div class="highlight highlight-java"><pre><span class="pl-k">package</span> <span class="pl-smp">get.started</span>;
+<div class="highlight highlight-java"><pre><span class="pl-k">package</span> <span class="pl-smi">get.started</span>;
 
 <span class="pl-k">import</span> <span class="pl-smi">java.io.IOException</span>;
 
 <span class="pl-k">import</span> <span class="pl-smi">org.parisoft.resty.RESTy</span>;
 
-<span class="pl-s">public</span> <span class="pl-s">class</span> <span class="pl-en">Example</span> {
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">Example</span> {
 
-    <span class="pl-s">public</span> <span class="pl-s">static</span> <span class="pl-st">void</span> <span class="pl-en">main</span>(<span class="pl-st">String</span>[] <span class="pl-v">args</span>) <span class="pl-s">throws</span> <span class="pl-stj">IOException</span> {
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">main</span>(<span class="pl-k">String</span>[] <span class="pl-v">args</span>) <span class="pl-k">throws</span> <span class="pl-smi">IOException</span> {
 
-        <span class="pl-stj">Meta</span> meta <span class="pl-k">=</span> <span class="pl-stj">RESTy</span><span class="pl-k">.</span>client(<span class="pl-s1"><span class="pl-pds">"</span>https://api.github.com<span class="pl-pds">"</span></span>)
-                .path(<span class="pl-s1"><span class="pl-pds">"</span>meta<span class="pl-pds">"</span></span>)
-                .request()
-                .get(<span class="pl-stj">Meta</span><span class="pl-k">.</span>class);
+        <span class="pl-smi">Meta</span> meta <span class="pl-k">=</span> <span class="pl-smi">RESTy</span><span class="pl-k">.</span>request(<span class="pl-s"><span class="pl-pds">"</span>https://api.github.com<span class="pl-pds">"</span></span>)
+                .path(<span class="pl-s"><span class="pl-pds">"</span>meta<span class="pl-pds">"</span></span>)
+                .client()
+                .get(<span class="pl-smi">Meta</span><span class="pl-k">.</span>class);
 
-        <span class="pl-stj">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s1"><span class="pl-pds">"</span>Verifiable = <span class="pl-pds">"</span></span> <span class="pl-k">+</span> meta<span class="pl-k">.</span>isVerifiable());
-        <span class="pl-stj">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s1"><span class="pl-pds">"</span>Hooks      = <span class="pl-pds">"</span></span> <span class="pl-k">+</span> meta<span class="pl-k">.</span>getHooks());
+        <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>Verifiable = <span class="pl-pds">"</span></span> <span class="pl-k">+</span> meta<span class="pl-k">.</span>isVerifiable());
+        <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>Hooks      = <span class="pl-pds">"</span></span> <span class="pl-k">+</span> meta<span class="pl-k">.</span>getHooks());
     }
 }</pre></div>
 
@@ -138,7 +138,7 @@ Hooks      = [192.30.252.0/22]
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">RESTy maintained by <a href="https://github.com/Parisoft">Parisoft</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
 
