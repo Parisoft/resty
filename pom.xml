@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.parisoft</groupId>
 	<artifactId>resty</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>RESTy</name>
 	<description>A minimalist HTTP client made on top of Apache HttpComponets and Jackson Data Processor</description>
 	<url>http://parisoft.github.io/resty/</url>
