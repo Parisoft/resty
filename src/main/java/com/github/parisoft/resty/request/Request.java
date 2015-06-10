@@ -297,6 +297,18 @@ public class Request {
     }
 
     /**
+     * Sets a request Authorization header field to Basic authentication <a
+     * href=http://tools.ietf.org/html/rfc2617#page-6>(RFC 2617)</a>. <br>
+     *
+     * @param username A username
+     * @param password A password
+     * @return this request
+     */
+    public Request basicAuth(String username, String password) {
+        return header("Authorization", "Basic " + org.apache.commons.codec.binary.Base64.encodeBase64String((username + ":" + password).getBytes()));
+    }
+
+    /**
      * Sets a request <a href=http://tools.ietf.org/html/rfc2616#section-5.3>header</a> field.<br>
      * <br>
      * <i>Note:</i> this is equivalent to {@link #header(String, String...)}
