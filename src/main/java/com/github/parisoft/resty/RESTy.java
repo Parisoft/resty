@@ -54,7 +54,7 @@ import com.github.parisoft.resty.request.Request;
  *     {@literal @JsonProperty}("verifiable_password_authentication")
  *     private boolean verifiable;
  *
- *     private List<String> hooks;
+ *     private List{@literal <String>} hooks;
  *
  *     public boolean isVerifiable() {
  *         return verifiable;
@@ -64,11 +64,11 @@ import com.github.parisoft.resty.request.Request;
  *         this.verifiable = verifiable;
  *     }
  *
- *     public List<String> getHooks() {
+ *     public List{@literal <String>} getHooks() {
  *         return hooks;
  *     }
  *
- *     public void setHooks(List<String> hooks) {
+ *     public void setHooks(List{@literal <String>} hooks) {
  *         this.hooks = hooks;
  *     }
  * }
@@ -112,6 +112,7 @@ public class RESTy {
      * </pre>
      *
      * @param uri The string to be parsed into a URI
+     * @return A {@link Request} instance
      * @throws IllegalArgumentException If the URI string is null or violates RFC 2396
      */
     public static Request request(String uri) {
@@ -139,6 +140,7 @@ public class RESTy {
      * </pre>
      *
      * @param uri A {@link URI} as defined by <a href=https://www.ietf.org/rfc/rfc2396.txt>RFC 2396</a>
+     * @return A {@link Request} instance
      * @throws IllegalArgumentException If the URI is null
      */
     public static Request request(URI uri) {

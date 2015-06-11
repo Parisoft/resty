@@ -345,7 +345,7 @@ public class Request {
 
     /**
      * Adds some data to the <a href=https://tools.ietf.org/html/rfc3986#section-3.4>query</a> request in the form of "name=value" pairs.<br>
-     * The final URI of the request contains a query with all pairs in the order that this method was called, encoded and separated by a single '&' character.<br>
+     * The final URI of the request contains a query with all pairs in the order that this method was called, encoded and separated by a single '&amp;' character.<br>
      * <br>
      * <i>Note:</i> the "name=value" pairs cannot be encoded.
      *
@@ -360,7 +360,7 @@ public class Request {
 
     /**
      * Adds some data to the <a href=https://tools.ietf.org/html/rfc3986#section-3.4>query</a> request in the form of "name=value" pairs.<br>
-     * The final URI of the request contains a query with all pairs in the order that this method was called, encoded and separated by a single '&' character.
+     * The final URI of the request contains a query with all pairs in the order that this method was called, encoded and separated by a single '&amp;' character.
      *
      * @param name The name component of the query, may not be encoded
      * @param value The value component of the query, may not be encoded nor <code>null</code>

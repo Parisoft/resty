@@ -59,6 +59,16 @@
             <artifactId>httpmime</artifactId>
             <version>${httpcomponentes.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpcomponentes.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>${httpcomponentes.version}</version>
+        </dependency>
         <!-- Http Components -->
         <!-- Jackson processor -->
         <dependency>

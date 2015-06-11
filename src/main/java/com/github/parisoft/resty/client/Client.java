@@ -86,6 +86,7 @@ public class Client {
      * Default is 0 (no retries)
      *
      * @param retries The number of requests retries
+     * @return this client
      * @see RequestRetryHandler
      * @see IdempotentRequestMethods
      */
