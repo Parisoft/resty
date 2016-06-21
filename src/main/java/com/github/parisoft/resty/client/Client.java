@@ -790,8 +790,9 @@ public class Client {
                 .setRetryHandler(retryHandler)
                 .setDefaultSocketConfig(socketConfig)
                 .setDefaultRequestConfig(requestConfig)
-                .setSslcontext(sslContext)
+                .setSSLContext(sslContext)
                 .setSSLHostnameVerifier(hostnameVerifier)
+                .evictExpiredConnections()
                 .build();
     }
 }
