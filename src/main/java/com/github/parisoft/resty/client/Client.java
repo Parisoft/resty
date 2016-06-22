@@ -62,12 +62,8 @@ import com.github.parisoft.resty.response.ResponseFactory;
  */
 public class Client {
 
-    private static final HttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+    private static HttpClientConnectionManager connectionManager;
 
-    static {
-        new IdleConnectionEvictor(connectionManager, null, 1, TimeUnit.MINUTES, 0, null).start();
-    }
-    
     private final Request request;
     private int timeout = 0;
     private int retries = 0;
@@ -793,6 +789,7 @@ public class Client {
         }
 
         final HttpRequestRetryHandler retryHandler = new RequestRetryHandler(retries);
+        final HttpClientConnectionManager connectionManager = getConnectionManager();
         
         return HttpClientBuilder
                 .create()
@@ -804,6 +801,21 @@ public class Client {
                 .setSSLContext(sslContext)
                 .setSSLHostnameVerifier(hostnameVerifier)
                 .build();
+    }
+    
+    public static HttpClientConnectionManager getConnectionManager() {
+        if (connectionManager == null) {
+            synchronized (Client.class) {
+                if (connectionManager == null) {
+                    connectionManager = new PoolingHttpClientConnectionManager();
+                    ((PoolingHttpClientConnectionManager) connectionManager).setMaxTotal(Integer.MAX_VALUE);
+                    ((PoolingHttpClientConnectionManager) connectionManager).setDefaultMaxPerRoute(Integer.MAX_VALUE);
+                    new IdleConnectionEvictor(connectionManager, null, 1, TimeUnit.MINUTES, 0, null).start();
+                }
+            }
+        }
+        
+        return connectionManager;
     }
     
 }
