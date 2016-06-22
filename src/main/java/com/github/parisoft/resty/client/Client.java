@@ -35,9 +35,12 @@ import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.SocketConfig;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.IdleConnectionEvictor;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContexts;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -59,6 +62,12 @@ import com.github.parisoft.resty.response.ResponseFactory;
  */
 public class Client {
 
+    private static final HttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+
+    static {
+        new IdleConnectionEvictor(connectionManager, null, 1, TimeUnit.MINUTES, 0, null).start();
+    }
+    
     private final Request request;
     private int timeout = 0;
     private int retries = 0;
@@ -784,15 +793,17 @@ public class Client {
         }
 
         final HttpRequestRetryHandler retryHandler = new RequestRetryHandler(retries);
-
+        
         return HttpClientBuilder
                 .create()
+                .setConnectionManager(connectionManager)
+                .setConnectionManagerShared(true)
                 .setRetryHandler(retryHandler)
                 .setDefaultSocketConfig(socketConfig)
                 .setDefaultRequestConfig(requestConfig)
                 .setSSLContext(sslContext)
                 .setSSLHostnameVerifier(hostnameVerifier)
-                .evictExpiredConnections()
                 .build();
     }
+    
 }
