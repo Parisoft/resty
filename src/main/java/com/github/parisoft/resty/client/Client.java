@@ -24,6 +24,7 @@ import static com.github.parisoft.resty.request.RequestMethod.PUT;
 import static com.github.parisoft.resty.request.RequestMethod.TRACE;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
@@ -62,6 +63,7 @@ import com.github.parisoft.resty.response.ResponseFactory;
  */
 public class Client {
 
+    private static final HashMap<String, HttpClient> httpClientCache = new HashMap<>();
     private static HttpClientConnectionManager connectionManager;
 
     private final Request request;
@@ -755,6 +757,24 @@ public class Client {
      * @throws IOException If some problem occurs during the HttpClient configuration
      */
     public HttpClient toHttpClient() throws IOException {
+        String key = String.format("%s|%s|%s", timeout, retries, bypassSSL);
+        HttpClient httpClient = httpClientCache.get(key);
+        
+        if (httpClient == null) {
+            synchronized (getClass()) {
+                httpClient = httpClientCache.get(key);
+                
+                if (httpClient == null) {
+                    httpClient = newHttpClient();
+                    httpClientCache.put(key, httpClient);
+                }
+            }
+        }
+        
+        return httpClient;
+    }
+
+    private HttpClient newHttpClient() throws IOException {
         final SocketConfig socketConfig = SocketConfig
                 .custom()
                 .setSoTimeout(timeout)
